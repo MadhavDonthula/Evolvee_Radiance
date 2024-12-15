@@ -1,3 +1,4 @@
 Django
 
 dj-database-url
+psycopg2-binary  # If using PostgreSQL, otherwise comment this out if you're using SQLite.
