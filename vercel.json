@@ -1,13 +1,13 @@
 {
     "builds": [{
-        "src": "nemo/wsgi.py",
+        "src": "lip_products/wsgi.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "nemo/wsgi.py"
+            "dest": "lip_products/wsgi.py"
         }
     ]
 }
