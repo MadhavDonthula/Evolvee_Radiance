@@ -1,188 +1,91 @@
-{% extends "base.html" %}
-{% block title %}
-    {% if category %}{{ category.name }}{% else %}Luxe Lip Collection{% endif %}
-{% endblock %}
+import React from 'react';
 
-{% block content %}
-    <!-- Hero Section -->
-    <div class="relative mb-12">
-        <div class="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-40"></div>
-            <div class="relative h-full flex items-center justify-center text-center px-4">
-                <div>
-                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collection</h1>
-                    <p class="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
-                </div>
+const LipCollections = () => {
+  return (
+    <div className="min-h-screen bg-gray-900">
+      {/* Hero Section */}
+      <div className="relative mb-12">
+        <div className="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
+          <div className="absolute inset-0 bg-black opacity-40"></div>
+          <div className="relative h-full flex items-center justify-center text-center px-4">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collections</h1>
+              <p className="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
             </div>
+          </div>
         </div>
+      </div>
+
+      {/* Collections */}
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Ethereal Elegance Collection */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-pink-500 mb-2">Ethereal Elegance Collection</h2>
+            <p className="text-gray-400 italic">ethereal (adj.) - extremely delicate and light in a way that seems not to be of this world</p>
+          </div>
+          
+          {/* Crystal Couture Lip Kit */}
+          <div className="bg-gray-800 rounded-xl p-8 mb-8">
+            <h3 className="text-2xl font-bold text-pink-400 mb-4">Crystal Couture Lip Kit</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              {['Strike', 'Goal Digger', 'Lucious Red', 'Blush me', 'Salmon'].map((color) => (
+                <div key={color} className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                  <div className="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                    <span className="text-white text-lg font-bold">✧</span>
+                  </div>
+                  <h4 className="text-white font-bold mb-2">{color}</h4>
+                  <p className="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Evolvee Radiance Jr Collection */}
+          <div className="bg-gray-800 rounded-xl p-8">
+            <h3 className="text-2xl font-bold text-pink-400 mb-4">Evolvee Radiance Jr Collection</h3>
+            
+            {/* GlossPods Section */}
+            <div className="mb-8">
+              <h4 className="text-xl font-bold text-pink-300 mb-4">GlossPods</h4>
+              <div className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                <div className="h-32 bg-gradient-to-r from-transparent to-pink-200 rounded-lg mb-4 flex items-center justify-center">
+                  <span className="text-gray-800 font-bold">Clear Fruit Flavor</span>
+                </div>
+                <p className="text-gray-400">Regular clear fruit flavored lip gloss</p>
+              </div>
+            </div>
+
+            {/* LuminGloss Section */}
+            <div>
+              <h4 className="text-xl font-bold text-pink-300 mb-4">LuminGloss</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                {['Aurora Crystal', 'Bombshell', 'Brilliant', 'Angel', 'Mysterious'].map((color) => (
+                  <div key={color} className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div className="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">✧</span>
+                    </div>
+                    <h4 className="text-white font-bold mb-2">{color}</h4>
+                    <p className="text-gray-400 text-sm">Luminous shine gloss</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Newsletter Section */}
+        <div className="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center">
+          <h3 className="text-2xl font-bold text-white mb-4">Join Our Beauty Community</h3>
+          <p className="text-gray-200 mb-6">Subscribe to receive exclusive offers and beauty tips</p>
+          <div className="flex max-w-md mx-auto">
+            <input type="email" placeholder="Enter your email" className="flex-1 px-4 py-2 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500" />
+            <button className="px-6 py-2 bg-pink-500 text-white rounded-r-full hover:bg-pink-600">Subscribe</button>
+          </div>
+        </div>
+      </div>
     </div>
+  );
+};
 
-    <!-- Category Filter -->
-    <div class="flex justify-center space-x-4 mb-8">
-        <button class="px-6 py-2 rounded-full bg-pink-500 text-white hover:bg-pink-600">All</button>
-        <button class="px-6 py-2 rounded-full bg-gray-800 text-white hover:bg-pink-500">Lipsticks</button>
-        <button class="px-6 py-2 rounded-full bg-gray-800 text-white hover:bg-pink-500">Lip Gloss</button>
-        <button class="px-6 py-2 rounded-full bg-gray-800 text-white hover:bg-pink-500">Lip Care</button>
-    </div>
-
-    <!-- Products Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Product 1 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/FF69B4/FFFFFF" alt="Velvet Matte Lipstick" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm">New</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">Velvet Matte Lipstick</h2>
-                    <span class="text-2xl font-bold text-white">$24.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">Long-lasting matte finish with intense color payoff. Enriched with vitamin E.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-red-600 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-pink-400 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-purple-500 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/FF1493/FFFFFF" alt="Hydrating Lip Gloss" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm">Best Seller</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">Crystal Shine Lip Gloss</h2>
-                    <span class="text-2xl font-bold text-white">$19.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">High-shine formula with moisturizing properties and subtle shimmer effect.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-pink-300 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-rose-400 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-red-300 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/C71585/FFFFFF" alt="Lip Treatment Oil" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">Organic</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">Nourishing Lip Oil</h2>
-                    <span class="text-2xl font-bold text-white">$29.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">Luxurious oil blend with jojoba and vitamin E for ultimate lip care.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-yellow-400 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-rose-300 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-clear-400 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/DB7093/FFFFFF" alt="Lip Plumping Gloss" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Trending</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">Volume Boost Lip Plumper</h2>
-                    <span class="text-2xl font-bold text-white">$34.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">Advanced formula with peptides for natural-looking lip enhancement.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-pink-200 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-red-200 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 5 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF" alt="Lip Stain" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm">Limited</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">24H Lip Stain</h2>
-                    <span class="text-2xl font-bold text-white">$27.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">Lightweight stain that lasts all day with transfer-proof formula.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-red-800 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-pink-800 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-rose-900 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 6 -->
-        <div class="card rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div class="relative">
-                <img src="https://via.placeholder.com/400x400/FF69B4/FFFFFF" alt="Lip Mask" class="w-full h-80 object-cover">
-                <div class="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">Overnight</div>
-            </div>
-            <div class="p-6 bg-gray-900">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-xl font-bold text-pink-500">Overnight Lip Mask</h2>
-                    <span class="text-2xl font-bold text-white">$22.99</span>
-                </div>
-                <p class="text-gray-400 mb-4">Rich overnight treatment with honey and shea butter for soft lips.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-2">
-                        <span class="w-6 h-6 rounded-full bg-yellow-200 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                        <span class="w-6 h-6 rounded-full bg-pink-200 cursor-pointer border-2 border-transparent hover:border-white"></span>
-                    </div>
-                    <button class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all duration-300">
-                        View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Newsletter Section -->
-    <div class="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center">
-        <h3 class="text-2xl font-bold text-white mb-4">Join Our Beauty Community</h3>
-        <p class="text-gray-200 mb-6">Subscribe to receive exclusive offers and beauty tips</p>
-        <div class="flex max-w-md mx-auto">
-            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500">
-            <button class="px-6 py-2 bg-pink-500 text-white rounded-r-full hover:bg-pink-600">Subscribe</button>
-        </div>
-    </div>
-{% endblock %}
+export default LipCollections;

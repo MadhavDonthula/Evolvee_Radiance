@@ -114,7 +114,7 @@ USE_I18N = True
 USE_TZ = True
 import dj_database_url
 
-DATABASES["default"] = dj_database_url.parse("postgresql://evolvee_user:jvOwUsRCAie51O6ulSj7f2dQE4mpdm7e@dpg-ctdp5hlumphs739720f0-a.oregon-postgres.render.com/evolvee")
+DATABASES["default"] = dj_database_url.parse("postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance")
 
 
 # Static files (CSS, JavaScript, Images)
