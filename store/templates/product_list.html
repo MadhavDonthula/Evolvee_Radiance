@@ -1,91 +1,156 @@
-import React from 'react';
+{% extends "base.html" %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Luxe Lip Collection{% endif %}
+{% endblock %}
 
-const LipCollections = () => {
-  return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Hero Section */}
-      <div className="relative mb-12">
-        <div className="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-          <div className="relative h-full flex items-center justify-center text-center px-4">
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collections</h1>
-              <p className="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Collections */}
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Ethereal Elegance Collection */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-pink-500 mb-2">Ethereal Elegance Collection</h2>
-            <p className="text-gray-400 italic">ethereal (adj.) - extremely delicate and light in a way that seems not to be of this world</p>
-          </div>
-          
-          {/* Crystal Couture Lip Kit */}
-          <div className="bg-gray-800 rounded-xl p-8 mb-8">
-            <h3 className="text-2xl font-bold text-pink-400 mb-4">Crystal Couture Lip Kit</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {['Strike', 'Goal Digger', 'Lucious Red', 'Blush me', 'Salmon'].map((color) => (
-                <div key={color} className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
-                  <div className="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">✧</span>
-                  </div>
-                  <h4 className="text-white font-bold mb-2">{color}</h4>
-                  <p className="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+{% block content %}
+    <!-- Hero Section -->
+    <div class="relative mb-12">
+        <div class="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <div class="relative h-full flex items-center justify-center text-center px-4">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collections</h1>
+                    <p class="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
                 </div>
-              ))}
             </div>
-          </div>
-
-          {/* Evolvee Radiance Jr Collection */}
-          <div className="bg-gray-800 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-pink-400 mb-4">Evolvee Radiance Jr Collection</h3>
-            
-            {/* GlossPods Section */}
-            <div className="mb-8">
-              <h4 className="text-xl font-bold text-pink-300 mb-4">GlossPods</h4>
-              <div className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
-                <div className="h-32 bg-gradient-to-r from-transparent to-pink-200 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-gray-800 font-bold">Clear Fruit Flavor</span>
-                </div>
-                <p className="text-gray-400">Regular clear fruit flavored lip gloss</p>
-              </div>
-            </div>
-
-            {/* LuminGloss Section */}
-            <div>
-              <h4 className="text-xl font-bold text-pink-300 mb-4">LuminGloss</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                {['Aurora Crystal', 'Bombshell', 'Brilliant', 'Angel', 'Mysterious'].map((color) => (
-                  <div key={color} className="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
-                    <div className="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">✧</span>
-                    </div>
-                    <h4 className="text-white font-bold mb-2">{color}</h4>
-                    <p className="text-gray-400 text-sm">Luminous shine gloss</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
-
-        {/* Newsletter Section */}
-        <div className="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">Join Our Beauty Community</h3>
-          <p className="text-gray-200 mb-6">Subscribe to receive exclusive offers and beauty tips</p>
-          <div className="flex max-w-md mx-auto">
-            <input type="email" placeholder="Enter your email" className="flex-1 px-4 py-2 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500" />
-            <button className="px-6 py-2 bg-pink-500 text-white rounded-r-full hover:bg-pink-600">Subscribe</button>
-          </div>
-        </div>
-      </div>
     </div>
-  );
-};
 
-export default LipCollections;
+    <!-- Ethereal Elegance Collection -->
+    <div class="max-w-7xl mx-auto px-4 mb-16">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-pink-500 mb-2">Ethereal Elegance Collection</h2>
+            <p class="text-gray-400 italic">ethereal (adj.) - extremely delicate and light in a way that seems not to be of this world</p>
+        </div>
+
+        <!-- Crystal Couture Lip Kit -->
+        <div class="bg-gray-800 rounded-xl p-8 mb-8">
+            <h3 class="text-2xl font-bold text-pink-400 mb-4">Crystal Couture Lip Kit</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <!-- Strike -->
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Strike" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Strike</h4>
+                    <p class="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+
+                <!-- Goal Digger -->
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Goal Digger" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Goal Digger</h4>
+                    <p class="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+
+                <!-- Lucious Red -->
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Lucious Red" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Lucious Red</h4>
+                    <p class="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+
+                <!-- Blush me -->
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Blush me" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Blush me</h4>
+                    <p class="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+
+                <!-- Salmon -->
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Salmon" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Salmon</h4>
+                    <p class="text-gray-400 text-sm">Rhinestone-enhanced lip kit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolvee Radiance Jr Collection -->
+        <div class="bg-gray-800 rounded-xl p-8">
+            <h3 class="text-2xl font-bold text-pink-400 mb-8">Evolvee Radiance Jr Collection</h3>
+
+            <!-- GlossPods Section -->
+            <div class="mb-12">
+                <h4 class="text-xl font-bold text-pink-300 mb-4">GlossPods</h4>
+                <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                    <div class="h-32 bg-gradient-to-r from-transparent to-pink-200 rounded-lg mb-4 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Clear Fruit Flavor" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <h4 class="text-white font-bold mb-2">Clear Fruit Flavor</h4>
+                    <p class="text-gray-400">Regular clear fruit flavored lip gloss</p>
+                </div>
+            </div>
+
+            <!-- LuminGloss Section -->
+            <div>
+                <h4 class="text-xl font-bold text-pink-300 mb-4">LuminGloss</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <!-- Aurora Crystal -->
+                    <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                        <div class="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                            <img src="/api/placeholder/400/320" alt="Aurora Crystal" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <h4 class="text-white font-bold mb-2">Aurora Crystal</h4>
+                        <p class="text-gray-400 text-sm">Luminous shine gloss</p>
+                    </div>
+
+                    <!-- Bombshell -->
+                    <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                        <div class="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                            <img src="/api/placeholder/400/320" alt="Bombshell" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <h4 class="text-white font-bold mb-2">Bombshell</h4>
+                        <p class="text-gray-400 text-sm">Luminous shine gloss</p>
+                    </div>
+
+                    <!-- Brilliant -->
+                    <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                        <div class="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                            <img src="/api/placeholder/400/320" alt="Brilliant" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <h4 class="text-white font-bold mb-2">Brilliant</h4>
+                        <p class="text-gray-400 text-sm">Luminous shine gloss</p>
+                    </div>
+
+                    <!-- Angel -->
+                    <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                        <div class="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                            <img src="/api/placeholder/400/320" alt="Angel" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <h4 class="text-white font-bold mb-2">Angel</h4>
+                        <p class="text-gray-400 text-sm">Luminous shine gloss</p>
+                    </div>
+
+                    <!-- Mysterious -->
+                    <div class="bg-gray-900 rounded-lg p-4 transform hover:scale-105 transition-transform duration-300">
+                        <div class="h-48 bg-gradient-to-br from-pink-200 to-purple-300 rounded-lg mb-4 flex items-center justify-center">
+                            <img src="/api/placeholder/400/320" alt="Mysterious" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <h4 class="text-white font-bold mb-2">Mysterious</h4>
+                        <p class="text-gray-400 text-sm">Luminous shine gloss</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center">
+        <h3 class="text-2xl font-bold text-white mb-4">Join Our Beauty Community</h3>
+        <p class="text-gray-200 mb-6">Subscribe to receive exclusive offers and beauty tips</p>
+        <div class="flex max-w-md mx-auto">
+            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500">
+            <button class="px-6 py-2 bg-pink-500 text-white rounded-r-full hover:bg-pink-600">Subscribe</button>
+        </div>
+    </div>
+{% endblock %}
