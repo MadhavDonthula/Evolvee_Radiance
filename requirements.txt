@@ -5,3 +5,4 @@ os
 mediapipe
 opencv-python 
 numpy
+whitenoise
