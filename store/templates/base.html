@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Evolvee Radiance Store{% endblock %}</title>
+    <title>{% block title %}Evolvée Radiance Store{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
@@ -23,7 +23,7 @@
 <body>
     <nav class="bg-gray-900 p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-pink-500">Evolvee Radiance</a>
+            <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-pink-500">Evolvée Radiance</a>
             <div class="space-x-4">
                 {% for c in categories %}
                     <a href="{{ c.get_absolute_url }}" class="text-gray-300 hover:text-pink-500">{{ c.name }}</a>
@@ -39,11 +39,8 @@
     
     <footer class="bg-gray-900 text-gray-300 p-4 mt-8">
         <div class="container mx-auto text-center">
-            <p>&copy; 2024 Evolvee Radiance. All rights reserved.</p>
+            <p>&copy; 2024 Evolvée Radiance. All rights reserved.</p>
         </div>
     </footer>
-    // nice//
 </body>
 </html>
-
-
