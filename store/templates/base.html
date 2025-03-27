@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Evolvée Radiance Store{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #1a1a1a;
@@ -28,6 +29,20 @@
                 {% for c in categories %}
                     <a href="{{ c.get_absolute_url }}" class="text-gray-300 hover:text-pink-500">{{ c.name }}</a>
                 {% endfor %}
+            </div>
+            <div class="flex space-x-4 items-center">
+                <a href="{% url 'login' %}" class="text-gray-300 hover:text-pink-500">
+                    <i class="fa-solid fa-user"></i>
+                </a>      
+                <a href="{% url 'store:saved_items' %}" class="text-gray-300 hover:text-pink-500">
+                    <i class="fa-solid fa-heart"></i>
+                </a>          
+                <a href="{% url 'store:search' %}" class="text-gray-300 hover:text-pink-500">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                <a href="{% url 'store:checkout' %}" class="text-gray-300 hover:text-pink-500">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
             </div>
         </div>
     </nav>

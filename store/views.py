@@ -21,6 +21,15 @@ def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True)
     return render(request, 'store/product_detail.html', {'product': product})
 
+def search(request):
+    return render(request, 'store/search.html')
+
+def checkout(request):
+    return render(request, 'store/checkout.html')
+
+def saved_items(request):
+    return render(request, 'store/saved_items.html')
+    
 # views.py
 import json
 from django.http import JsonResponse
