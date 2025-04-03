@@ -5,3 +5,5 @@ dj-database-url
 opencv-python 
 numpy
 whitenoise
+psycopg
+Pillow

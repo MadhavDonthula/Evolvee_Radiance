@@ -38,27 +38,17 @@ def product_list(request, category_slug=None):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True)
-<<<<<<< HEAD
-    return render(request, 'store/product_detail.html', {'product': product})
+    return render(request, 'product_detail.html', {'product': product})
 
 def search(request):
-    return render(request, 'store/search.html')
+    return render(request, 'search.html')
 
 def checkout(request):
-    return render(request, 'store/checkout.html')
+    return render(request, 'checkout.html')
 
 def saved_items(request):
-    return render(request, 'store/saved_items.html')
-    
-# views.py
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import numpy as np
-import cv2
-import base64
+    return render(request, 'saved_items.html')
 
-=======
     
     # Get related products
     related_products = Product.objects.filter(
@@ -99,4 +89,4 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect("loginPage")
->>>>>>> 39480b0 (adding_products)
+
