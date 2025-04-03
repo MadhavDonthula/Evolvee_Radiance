@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Lip Collection - Register</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}" />
+    <link
+      rel="alternate icon"
+      type="image/x-icon"
+      href="{% static 'favicon.ico' %}" />
+    <style>
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(-45deg, #9d174d, #db2777, #f472b6, #fbcfe8);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+      }
+      .card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      .input-group {
+        position: relative;
+      }
+      .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+      }
+      .form-input {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #db2777;
+        box-shadow: 0 0 0 3px rgba(219, 39, 119, 0.1);
+      }
+      .form-input::placeholder {
+        color: #a0aec0;
+      }
+      .btn-primary {
+        background-color: #db2777;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+      }
+      .btn-primary:hover {
+        background-color: #be185d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .btn-admin {
+        background-color: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 1rem;
+      }
+      .btn-admin:hover {
+        background-color: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <h1
+        class="text-5xl font-bold mb-8 text-white"
+        style="font-family: 'Poppins', sans-serif">
+        Luxe Lip Collection
+      </h1>
+      <div class="card p-8 w-full max-w-md">
+        <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800">
+          Register Account
+        </h2>
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="input-group mb-4">
+            <i class="fas fa-user input-icon"></i>
+            {{ form.username }}
+          </div>
+          <div class="input-group mb-4">
+            <i class="fas fa-lock input-icon"></i>
+            {{ form.password1 }}
+          </div>
+          <div class="input-group mb-6">
+            <i class="fas fa-lock input-icon"></i>
+            {{ form.password2 }}
+          </div>
+          <button
+            type="submit"
+            class="btn-primary w-full py-3 rounded text-white font-bold text-lg">
+            Register Account
+          </button>
+        </form>
+        {% if form.errors %}
+        <div class="mt-4 text-red-500">{{ form.errors }}</div>
+        {% endif %}
+        <div class="mt-6 text-center">
+          <p class="text-gray-600">
+            Already have an account?
+            <a
+              href="{% url 'store:login' %}"
+              class="text-pink-500 hover:underline font-semibold"
+              >Login</a>
+          </p>
+          <a href="{% url 'admin:index' %}" class="btn-admin"> Admin Login </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set placeholders for form fields
+      var form_fields = document.getElementsByTagName("input");
+      form_fields[1].placeholder = "Username..";
+      form_fields[2].placeholder = "Enter Password....";
+      form_fields[3].placeholder = "Re-enter Password...";
+
+      for (var field in form_fields) {
+        form_fields[field].className += " form-input";
+      }
+    </script>
+  </body>
+</html>

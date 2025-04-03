@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Evolvée Radiance Store{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<<<<<<< HEAD
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+=======
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+>>>>>>> 39480b0 (adding_products)
     <style>
         body {
             background-color: #1a1a1a;
@@ -24,11 +28,30 @@
 <body>
     <nav class="bg-gray-900 p-4">
         <div class="container mx-auto flex justify-between items-center">
+<<<<<<< HEAD
             <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-pink-500">Evolvée Radiance</a>
             <div class="space-x-4">
                 {% for c in categories %}
                     <a href="{{ c.get_absolute_url }}" class="text-gray-300 hover:text-pink-500">{{ c.name }}</a>
                 {% endfor %}
+=======
+            <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-pink-500">Evolvee Radiance</a>
+            <div class="flex items-center">
+                <div class="space-x-4 mr-6">
+                    {% for c in categories %}
+                        <a href="{{ c.get_absolute_url }}" class="text-gray-300 hover:text-pink-500">{{ c.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="flex items-center">
+                    {% if user.is_authenticated %}
+                        <span class="text-gray-300 mr-4">Welcome, {{ user.username }}</span>
+                        <a href="{% url 'store:logout' %}" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-full transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'store:login' %}" class="text-gray-300 hover:text-pink-500 mr-4">Login</a>
+                        <a href="{% url 'store:register' %}" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-full transition">Register</a>
+                    {% endif %}
+                </div>
+>>>>>>> 39480b0 (adding_products)
             </div>
             <div class="flex space-x-4 items-center">
                 <a href="{% url 'login' %}" class="text-gray-300 hover:text-pink-500">

@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-    {% if category %}{{ category.name }}{% else %}Luxe Lip Collection{% endif %}
+    {% if category %}{{ category.name }}{% else %}Evolvee Radiance Store{% endif %}
 {% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
     <!-- Hero Section -->
     <div class="relative mb-12 opacity-0 scale-95 transition-all duration-1000 animate-item">
         <div class="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
@@ -98,9 +99,40 @@
                         </div>
                         <h4 class="text-white font-bold mb-2">Salmon</h4>
                         <p class="text-gray-400 text-sm">Coral perfection</p>
+=======
+    <!-- Hero Section with Image Scroll Wheel Animation -->
+    <div class="relative mb-12">
+        <div class="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
+            <!-- Hero Scroll Wheel Animation -->
+            <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+                <!-- Hero Slide 1 -->
+                <div class="hero-slide absolute inset-0 w-full h-full opacity-100 transition-opacity duration-500">
+                    <div class="absolute inset-0 bg-black opacity-40"></div>
+                    <div class="relative h-full flex items-center justify-center text-center px-4">
+                        <div>
+                            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collections</h1>
+                            <p class="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
+                        </div>
                     </div>
                 </div>
+                
+                {% for product in featured_products %}
+                <div class="hero-slide absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black opacity-40"></div>
+                    <div class="relative h-full flex items-center justify-center text-center px-4">
+                        <div>
+                            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">{{ product.name }}</h1>
+                            <p class="text-xl text-gray-200 max-w-2xl mx-auto">{{ product.description|truncatewords:15 }}</p>
+                        </div>
+>>>>>>> 39480b0 (adding_products)
+                    </div>
+                </div>
+                {% endfor %}
             </div>
+<<<<<<< HEAD
         </div>
 
         <!-- Evolvée Radiance Jr Collection -->
@@ -196,9 +228,108 @@
                         </div>
                     </div>
                 </div>
+=======
+            
+            <!-- Hero Carousel Navigation Dots -->
+            <div class="absolute bottom-6 left-0 right-0 flex justify-center space-x-2">
+                <button class="hero-dot w-3 h-3 rounded-full bg-white opacity-100 transition-opacity"></button>
+                {% for product in featured_products %}
+                <button class="hero-dot w-3 h-3 rounded-full bg-white opacity-50 transition-opacity"></button>
+                {% endfor %}
+>>>>>>> 39480b0 (adding_products)
             </div>
         </div>
     </div>
+
+    {% if collections %}
+        {% for collection in collections %}
+        <div class="max-w-7xl mx-auto px-4 mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-pink-500 mb-2">{{ collection.name }}</h2>
+                <p class="text-gray-400 italic">{{ collection.description }}</p>
+            </div>
+
+            <!-- Collection Products -->
+            <div class="bg-gray-800 rounded-xl p-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for product in collection.products.all %}
+                        {% if product.available %}
+                        <div class="card rounded-xl shadow-lg overflow-hidden">
+                            <a href="{{ product.get_absolute_url }}">
+                                <div class="relative bg-gray-900 p-6">
+                                    <div class="h-48 rounded-lg mb-4 flex items-center justify-center">
+                                        {% if product.image %}
+                                        <img src="{{ product.image.url }}" class="h-full object-contain" alt="{{ product.name }}">
+                                        {% else %}
+                                        <div class="h-full w-full bg-gradient-to-br from-pink-600 to-purple-500 rounded-lg"></div>
+                                        {% endif %}
+                                    </div>
+                                    <h4 class="text-white font-bold mb-2">{{ product.name }}</h4>
+                                    <p class="text-gray-400 text-sm">{{ product.tagline }}</p>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <span class="text-pink-400 font-bold">${{ product.price }}</span>
+                                        {% if product.stock > 0 %}
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">In Stock</span>
+                                        {% else %}
+                                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Out of Stock</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- All Products Section -->
+        <div class="max-w-7xl mx-auto px-4 mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-pink-500 mb-2">
+                    {% if category %}{{ category.name }}{% else %}All Products{% endif %}
+                </h2>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="bg-gray-800 rounded-xl p-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for product in products %}
+                        {% if product.available %}
+                        <div class="card rounded-xl shadow-lg overflow-hidden">
+                            <a href="{{ product.get_absolute_url }}">
+                                <div class="relative bg-gray-900 p-6">
+                                    <div class="h-48 rounded-lg mb-4 flex items-center justify-center">
+                                        {% if product.image %}
+                                        <img src="{{ product.image.url }}" class="h-full object-contain" alt="{{ product.name }}">
+                                        {% else %}
+                                        <div class="h-full w-full bg-gradient-to-br from-pink-600 to-purple-500 rounded-lg"></div>
+                                        {% endif %}
+                                    </div>
+                                    <h4 class="text-white font-bold mb-2">{{ product.name }}</h4>
+                                    <p class="text-gray-400 text-sm">{{ product.tagline }}</p>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <span class="text-pink-400 font-bold">${{ product.price }}</span>
+                                        {% if product.stock > 0 %}
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">In Stock</span>
+                                        {% else %}
+                                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Out of Stock</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% empty %}
+                        <div class="col-span-4 text-center py-8">
+                            <p class="text-gray-400 text-lg">No products found in this category.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <!-- Newsletter Section -->
     <div class="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center opacity-0 translate-y-8 transition-all duration-1000 animate-item">
@@ -210,6 +341,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
 <style>
 .animate-item {
     will-change: transform, opacity;
@@ -452,4 +584,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+=======
+    <!-- Hero Scroll Wheel JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hero carousel setup
+            const heroSlides = document.querySelectorAll('.hero-slide');
+            const heroDots = document.querySelectorAll('.hero-dot');
+            let currentHeroSlide = 0;
+            let heroInterval;
+            
+            // Function to show a specific slide
+            function showHeroSlide(index) {
+                // Hide all slides
+                heroSlides.forEach(slide => {
+                    slide.classList.remove('opacity-100');
+                    slide.classList.add('opacity-0');
+                });
+                
+                // Show the selected slide
+                heroSlides[index].classList.remove('opacity-0');
+                heroSlides[index].classList.add('opacity-100');
+                
+                // Update dots
+                heroDots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.remove('opacity-50');
+                        dot.classList.add('opacity-100');
+                    } else {
+                        dot.classList.remove('opacity-100');
+                        dot.classList.add('opacity-50');
+                    }
+                });
+                
+                currentHeroSlide = index;
+            }
+            
+            // Start automatic scrolling
+            function startHeroAutoScroll() {
+                clearInterval(heroInterval);
+                heroInterval = setInterval(() => {
+                    const nextSlide = (currentHeroSlide + 1) % heroSlides.length;
+                    showHeroSlide(nextSlide);
+                }, 5000); // Change every 5 seconds
+            }
+            
+            // Add click events to dots
+            heroDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showHeroSlide(index);
+                    clearInterval(heroInterval);
+                    startHeroAutoScroll();
+                });
+            });
+            
+            // Initialize hero carousel
+            showHeroSlide(0);
+            startHeroAutoScroll();
+        });
+    </script>
+>>>>>>> 39480b0 (adding_products)
 {% endblock %}
