@@ -1,47 +1,444 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}
-    {% if category %}{{ category.name }}{% else %}Evolvee Radiance Store{% endif %}
-{% endblock %}
-
-{% block content %}
-    <!-- Hero Section with Image Scroll Wheel Animation -->
-    <div class="relative mb-12">
-        <div class="bg-gradient-to-r from-pink-900 to-purple-900 h-96 rounded-xl overflow-hidden">
-            <!-- Hero Scroll Wheel Animation -->
-            <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% if category %}{{ category.name }}{% else %}Evolvée Radiance Store{% endif %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f0f13;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .card {
+            background-color: #1e1e26;
+            transition: all 0.4s ease;
+            border: 1px solid #2a2a38;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(236, 72, 153, 0.12);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(17, 17, 23, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Carousel/Hero Styles */
+        .hero-section {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            height: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-position: center;
+            background-size: cover;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-content {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            z-index: 2;
+        }
+        
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(15, 15, 19, 0.7), rgba(15, 15, 19, 0.3));
+            z-index: 1;
+        }
+        
+        .carousel-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            transition-delay: 0.3s;
+        }
+        
+        .carousel-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            transition-delay: 0.5s;
+        }
+        
+        .carousel-button {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease, background-color 0.3s ease;
+            transition-delay: 0.7s;
+        }
+        
+        .carousel-slide.active .carousel-title,
+        .carousel-slide.active .carousel-subtitle,
+        .carousel-slide.active .carousel-button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        
+        .hero-slide.opacity-100 {
+            opacity: 1;
+        }
+        
+        /* Indicator Styles */
+        .carousel-indicators,
+        .hero-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 3;
+            gap: 8px;
+        }
+        
+        .carousel-indicator,
+        .hero-dot {
+            width: 40px;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.4);
+            margin: 0 2px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, width 0.3s ease;
+        }
+        
+        .carousel-indicator.active,
+        .hero-dot.opacity-100 {
+            background-color: #ec4899;
+            width: 60px;
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.25);
+        }
+        
+        /* Collection & Products Styling */
+        .collection-header {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .collection-header::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            border-radius: 3px;
+        }
+        
+        .products-container {
+            background: linear-gradient(145deg, #181820, #1a1a24);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            background: linear-gradient(135deg, #4a1d96, #831843);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: background-position 0.3s ease;
+        }
+        
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzMCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.2;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #0a0a0e;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0f0f13;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a38;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ec4899;
+        }
+        
+        /* Status badges */
+        .status-badge {
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+        }
+        
+        .in-stock {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+        }
+        
+        .out-of-stock {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+        }
+        
+        /* Product card enhancements */
+        .product-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #1a1a24, #232331);
+            transition: all 0.4s ease;
+            opacity: 0; /* Start with opacity 0 for scroll animation */
+            transform: translateY(20px); /* Start slightly below for animation */
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .product-image-container {
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover .product-image-container {
+            transform: scale(1.02);
+        }
+        
+        .product-price {
+            font-weight: 700;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar sticky top-0 py-5 px-4 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'store:product_list' %}" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Evolvée Radiance</a>
+            <div class="hidden md:flex space-x-8">
+                {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" class="nav-link text-gray-300 hover:text-pink-500 font-medium">{{ c.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="flex space-x-6 items-center">
+                <a href="{% url 'store:saved_items' %}" class="text-gray-300 hover:text-pink-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </a>          
+                <a href="{% url 'store:search' %}" class="text-gray-300 hover:text-pink-500 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                <a href="{% url 'store:cart_detail' %}" class="text-gray-300 hover:text-pink-500 transition-colors relative">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    {% with total_items=request.session.cart.items|length %}
+                        {% if total_items > 0 %}
+                            <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-fade-in">
+                                {{ total_items }}
+                            </span>
+                        {% endif %}
+                    {% endwith %}
+                </a>
+                <button class="md:hidden text-gray-300 hover:text-pink-500" id="mobile-menu-button">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu - hidden by default -->
+        <div id="mobile-menu" class="hidden md:hidden w-full mt-4 container mx-auto">
+            <div class="bg-gray-800 rounded-lg p-4 flex flex-col space-y-3">
+                {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" class="text-gray-300 hover:text-pink-500 py-2 px-3 rounded hover:bg-gray-700">{{ c.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+    
+    {% block content %}
+    <!-- Hero Section with Image Carousel Animation -->
+    <div class="hero-section container mx-auto p-4 mt-8">
+        <div class="carousel">
+            <div class="carousel-inner" id="hero-carousel">
                 <!-- Hero Slide 1 -->
-                <div class="hero-slide absolute inset-0 w-full h-full opacity-100 transition-opacity duration-500">
-                    <div class="absolute inset-0 bg-black opacity-40"></div>
-                    <div class="relative h-full flex items-center justify-center text-center px-4">
-                        <div>
-                            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Luxury Lip Collections</h1>
-                            <p class="text-xl text-gray-200 max-w-2xl mx-auto">Discover our premium selection of lip products designed to perfect your pout</p>
-                        </div>
+                <div class="carousel-slide active">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-content">
+                        <h1 class="carousel-title">Luxury Lip Collections</h1>
+                        <p class="carousel-subtitle">Discover our premium selection of lip products designed to perfect your pout</p>
+                        <a href="#" class="btn-primary inline-block carousel-button">Shop Now</a>
                     </div>
                 </div>
                 
                 {% for product in featured_products %}
-                <div class="hero-slide absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500">
+                <div class="carousel-slide">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ product.name }}">
                     {% endif %}
-                    <div class="absolute inset-0 bg-black opacity-40"></div>
-                    <div class="relative h-full flex items-center justify-center text-center px-4">
-                        <div>
-                            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">{{ product.name }}</h1>
-                            <p class="text-xl text-gray-200 max-w-2xl mx-auto">{{ product.description|truncatewords:15 }}</p>
-                        </div>
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-content">
+                        <h1 class="carousel-title">{{ product.name }}</h1>
+                        <p class="carousel-subtitle">{{ product.description|truncatewords:15 }}</p>
+                        <a href="{{ product.get_absolute_url }}" class="btn-primary inline-block carousel-button">View Product</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             
             <!-- Hero Carousel Navigation Dots -->
-            <div class="absolute bottom-6 left-0 right-0 flex justify-center space-x-2">
-                <button class="hero-dot w-3 h-3 rounded-full bg-white opacity-100 transition-opacity"></button>
+            <div class="carousel-indicators">
+                <div class="carousel-indicator active"></div>
                 {% for product in featured_products %}
-                <button class="hero-dot w-3 h-3 rounded-full bg-white opacity-50 transition-opacity"></button>
+                <div class="carousel-indicator"></div>
                 {% endfor %}
             </div>
         </div>
@@ -50,20 +447,20 @@
     {% if collections %}
         {% for collection in collections %}
         <div class="max-w-7xl mx-auto px-4 mb-16">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-pink-500 mb-2">{{ collection.name }}</h2>
+            <div class="text-center mb-12 collection-header">
+                <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-2">{{ collection.name }}</h2>
                 <p class="text-gray-400 italic">{{ collection.description }}</p>
             </div>
 
             <!-- Collection Products -->
-            <div class="bg-gray-800 rounded-xl p-8 mb-12">
+            <div class="products-container mb-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {% for product in collection.products.all %}
                         {% if product.available %}
-                        <div class="card rounded-xl shadow-lg overflow-hidden">
+                        <div class="product-card shadow-lg overflow-hidden">
                             <a href="{{ product.get_absolute_url }}">
-                                <div class="relative bg-gray-900 p-6">
-                                    <div class="h-48 rounded-lg mb-4 flex items-center justify-center">
+                                <div class="relative p-6">
+                                    <div class="product-image-container h-48 rounded-lg mb-4 flex items-center justify-center">
                                         {% if product.image %}
                                         <img src="{{ product.image.url }}" class="h-full object-contain" alt="{{ product.name }}">
                                         {% else %}
@@ -73,11 +470,11 @@
                                     <h4 class="text-white font-bold mb-2">{{ product.name }}</h4>
                                     <p class="text-gray-400 text-sm">{{ product.tagline }}</p>
                                     <div class="mt-4 flex justify-between items-center">
-                                        <span class="text-pink-400 font-bold">${{ product.price }}</span>
+                                        <span class="product-price text-lg">${{ product.price }}</span>
                                         {% if product.stock > 0 %}
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">In Stock</span>
+                                        <span class="status-badge in-stock">In Stock</span>
                                         {% else %}
-                                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Out of Stock</span>
+                                        <span class="status-badge out-of-stock">Out of Stock</span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -92,21 +489,21 @@
     {% else %}
         <!-- All Products Section -->
         <div class="max-w-7xl mx-auto px-4 mb-16">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-pink-500 mb-2">
+            <div class="text-center mb-12 collection-header">
+                <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-2">
                     {% if category %}{{ category.name }}{% else %}All Products{% endif %}
                 </h2>
             </div>
 
             <!-- Products Grid -->
-            <div class="bg-gray-800 rounded-xl p-8 mb-12">
+            <div class="products-container mb-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {% for product in products %}
                         {% if product.available %}
-                        <div class="card rounded-xl shadow-lg overflow-hidden">
+                        <div class="product-card shadow-lg overflow-hidden">
                             <a href="{{ product.get_absolute_url }}">
-                                <div class="relative bg-gray-900 p-6">
-                                    <div class="h-48 rounded-lg mb-4 flex items-center justify-center">
+                                <div class="relative p-6">
+                                    <div class="product-image-container h-48 rounded-lg mb-4 flex items-center justify-center">
                                         {% if product.image %}
                                         <img src="{{ product.image.url }}" class="h-full object-contain" alt="{{ product.name }}">
                                         {% else %}
@@ -116,11 +513,11 @@
                                     <h4 class="text-white font-bold mb-2">{{ product.name }}</h4>
                                     <p class="text-gray-400 text-sm">{{ product.tagline }}</p>
                                     <div class="mt-4 flex justify-between items-center">
-                                        <span class="text-pink-400 font-bold">${{ product.price }}</span>
+                                        <span class="product-price text-lg">${{ product.price }}</span>
                                         {% if product.stock > 0 %}
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">In Stock</span>
+                                        <span class="status-badge in-stock">In Stock</span>
                                         {% else %}
-                                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Out of Stock</span>
+                                        <span class="status-badge out-of-stock">Out of Stock</span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -138,71 +535,305 @@
     {% endif %}
 
     <!-- Newsletter Section -->
-    <div class="mt-16 bg-gradient-to-r from-pink-900 to-purple-900 rounded-xl p-8 text-center">
-        <h3 class="text-2xl font-bold text-white mb-4">Join Our Beauty Community</h3>
-        <p class="text-gray-200 mb-6">Subscribe to receive exclusive offers and beauty tips</p>
+    <div class="newsletter-section max-w-7xl mx-auto my-16 px-8 py-12 text-center relative">
+        <h3 class="text-3xl font-bold text-white mb-4">Join Our Beauty Community</h3>
+        <p class="text-gray-200 mb-8 max-w-2xl mx-auto">Subscribe to receive exclusive offers, early access to new collections, and expert beauty tips tailored for you.</p>
         <div class="flex max-w-md mx-auto">
-            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500">
-            <button class="px-6 py-2 bg-pink-500 text-white rounded-r-full hover:bg-pink-600">Subscribe</button>
+            <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-3 rounded-l-full bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-pink-500">
+            <button class="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-r-full hover:from-pink-600 hover:to-purple-600 transition-all font-semibold">Subscribe</button>
         </div>
     </div>
-
-    <!-- Hero Scroll Wheel JavaScript -->
+    {% endblock %}
+    
+    <footer class="footer py-12 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-4">Evolvée Radiance</h4>
+                    <p class="text-gray-400 mb-6">Elevate your beauty routine with our luxury cosmetics and skincare products.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
+                            <i class="fab fa-pinterest text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-bold mb-4">Shop</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Makeup</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Skincare</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Fragrance</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Gift Sets</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-bold mb-4">Help</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Shipping</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-bold mb-4">Newsletter</h5>
+                    <p class="text-gray-400 mb-4">Subscribe for exclusive offers and beauty tips.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:border-pink-500 w-full">
+                        <button class="bg-pink-500 text-white px-4 rounded-r-lg hover:bg-pink-600 transition-colors">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-10 pt-8 text-center">
+                <p class="text-gray-500">&copy; 2024 Evolvée Radiance. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Hero carousel setup
-            const heroSlides = document.querySelectorAll('.hero-slide');
-            const heroDots = document.querySelectorAll('.hero-dot');
-            let currentHeroSlide = 0;
-            let heroInterval;
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Carousel functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            let currentSlide = 0;
+            let interval;
             
-            // Function to show a specific slide
-            function showHeroSlide(index) {
+            function showSlide(index) {
                 // Hide all slides
-                heroSlides.forEach(slide => {
-                    slide.classList.remove('opacity-100');
-                    slide.classList.add('opacity-0');
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
                 });
                 
-                // Show the selected slide
-                heroSlides[index].classList.remove('opacity-0');
-                heroSlides[index].classList.add('opacity-100');
+                // Show current slide
+                slides[index].classList.add('active');
                 
-                // Update dots
-                heroDots.forEach((dot, i) => {
-                    if (i === index) {
-                        dot.classList.remove('opacity-50');
-                        dot.classList.add('opacity-100');
-                    } else {
-                        dot.classList.remove('opacity-100');
-                        dot.classList.add('opacity-50');
-                    }
+                // Update indicators
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('active', i === index);
                 });
                 
-                currentHeroSlide = index;
+                currentSlide = index;
             }
             
-            // Start automatic scrolling
-            function startHeroAutoScroll() {
-                clearInterval(heroInterval);
-                heroInterval = setInterval(() => {
-                    const nextSlide = (currentHeroSlide + 1) % heroSlides.length;
-                    showHeroSlide(nextSlide);
-                }, 5000); // Change every 5 seconds
+            function nextSlide() {
+                let next = currentSlide + 1;
+                if (next >= slides.length) {
+                    next = 0;
+                }
+                showSlide(next);
             }
             
-            // Add click events to dots
-            heroDots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    showHeroSlide(index);
-                    clearInterval(heroInterval);
-                    startHeroAutoScroll();
+            // Start automatic sliding
+            function startSlider() {
+                interval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
+            }
+            
+            // Add click events to indicators
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    clearInterval(interval);
+                    showSlide(index);
+                    startSlider();
                 });
             });
             
-            // Initialize hero carousel
-            showHeroSlide(0);
-            startHeroAutoScroll();
+            // Initialize slider
+            startSlider();
+            
+            // Add a little animation effect to products on scroll
+            const animateOnScroll = () => {
+                const products = document.querySelectorAll('.product-card');
+                products.forEach((product, index) => {
+                    const productPosition = product.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (productPosition < screenPosition) {
+                        setTimeout(() => {
+                            product.style.opacity = 1;
+                            product.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            };
+            
+            // Initialize product cards with opacity 0 and translateY for animation
+            document.querySelectorAll('.product-card').forEach(product => {
+                product.style.opacity = 0;
+                product.style.transform = 'translateY(20px)';
+                product.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+            
+            // Call the animation function on scroll and on initial load
+            window.addEventListener('scroll', animateOnScroll);
+            window.addEventListener('load', animateOnScroll);
+            
+            // Add hover effects for product images
+            document.querySelectorAll('.product-card').forEach(card => {
+                const image = card.querySelector('.product-image-container');
+                
+                card.addEventListener('mouseenter', () => {
+                    if (image) {
+                        image.style.transform = 'scale(1.05)';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    if (image) {
+                        image.style.transform = 'scale(1)';
+                    }
+                });
+            });
+            
+            // Add smooth scrolling for all anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add parallax effect to newsletter section
+            const newsletterSection = document.querySelector('.newsletter-section');
+            if (newsletterSection) {
+                window.addEventListener('scroll', () => {
+                    const scrollPosition = window.pageYOffset;
+                    const newsletterPosition = newsletterSection.offsetTop;
+                    const distance = scrollPosition - newsletterPosition;
+                    
+                    if (scrollPosition > newsletterPosition - window.innerHeight && 
+                        scrollPosition < newsletterPosition + newsletterSection.offsetHeight) {
+                        newsletterSection.style.backgroundPosition = `center ${distance * 0.2}px`;
+                    }
+                });
+            }
+            
+            // Add a subtle fade effect for the navigation
+            const navbar = document.querySelector('.navbar');
+            let lastScrollTop = 0;
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    navbar.style.background = 'rgba(10, 10, 18, 0.97)';
+                    navbar.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.3)';
+                } else {
+                    navbar.style.background = 'rgba(17, 17, 23, 0.95)';
+                    navbar.style.boxShadow = 'none';
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }, { passive: true });
+            
+            // Add touch support for mobile carousel
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            const carousel = document.querySelector('.carousel');
+            if (carousel) {
+                carousel.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                
+                carousel.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, { passive: true });
+                
+                function handleSwipe() {
+                    if (touchEndX < touchStartX - 50) {
+                        // Swipe left - go to next slide
+                        clearInterval(interval);
+                        nextSlide();
+                        startSlider();
+                    } else if (touchEndX > touchStartX + 50) {
+                        // Swipe right - go to previous slide
+                        clearInterval(interval);
+                        let prev = currentSlide - 1;
+                        if (prev < 0) {
+                            prev = slides.length - 1;
+                        }
+                        showSlide(prev);
+                        startSlider();
+                    }
+                }
+            }
+            
+            // Add loading animation for images
+            document.querySelectorAll('img').forEach(img => {
+                // Add a loading class
+                img.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                
+                // When image loads, fade it in
+                img.addEventListener('load', () => {
+                    img.classList.remove('opacity-0');
+                });
+                
+                // If image is already loaded (from cache), remove the opacity class
+                if (img.complete) {
+                    img.classList.remove('opacity-0');
+                }
+            });
+            
+            // Add subscription form handling
+            const newsletterForms = document.querySelectorAll('.newsletter-section form, footer form');
+            newsletterForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const emailInput = this.querySelector('input[type="email"]');
+                    
+                    if (emailInput && emailInput.value) {
+                        // Show a success message
+                        const parentContainer = this.parentNode;
+                        this.style.display = 'none';
+                        
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'text-white bg-green-500 bg-opacity-20 p-4 rounded-lg mt-4 animate-fade-in';
+                        successMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Thank you for subscribing to our newsletter!';
+                        
+                        parentContainer.appendChild(successMessage);
+                        
+                        // Reset form after 3 seconds
+                        setTimeout(() => {
+                            emailInput.value = '';
+                            successMessage.remove();
+                            this.style.display = 'flex';
+                        }, 3000);
+                    }
+                });
+            });
         });
     </script>
-{% endblock %}
+</body>
+</html>
+
+            
+    

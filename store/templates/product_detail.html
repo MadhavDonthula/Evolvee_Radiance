@@ -53,24 +53,25 @@
                 </div>
                 
                 {% if product.stock > 0 %}
-                <div class="flex items-center mb-6">
+                <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="flex items-center mb-6">
+                    {% csrf_token %}
                     <div class="flex items-center bg-gray-900 rounded-l-lg">
-                        <button class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="decrease">
+                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="decrease">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <input type="number" min="1" max="{{ product.stock }}" value="1" class="w-12 text-center bg-gray-900 text-white border-0 focus:outline-none" id="quantity">
-                        <button class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="increase">
+                        <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" class="w-12 text-center bg-gray-900 text-white border-0 focus:outline-none" id="quantity">
+                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="increase">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
                         </button>
                     </div>
-                    <button class="flex-1 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-r-lg transition">
+                    <button type="submit" class="flex-1 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-r-lg transition">
                         Add to Cart
                     </button>
-                </div>
+                </form>
                 {% endif %}
                 
                 <div class="border-t border-gray-700 pt-6">

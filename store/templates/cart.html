@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Your Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-pink-500 mb-8">Your Shopping Cart</h1>
+    
+    {% if cart_items %}
+    <div class="bg-gray-800 rounded-xl p-6 mb-8">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-gray-700">
+                        <th class="py-4 px-2 text-left text-gray-300">Product</th>
+                        <th class="py-4 px-2 text-center text-gray-300">Quantity</th>
+                        <th class="py-4 px-2 text-right text-gray-300">Price</th>
+                        <th class="py-4 px-2 text-right text-gray-300">Total</th>
+                        <th class="py-4 px-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr class="border-b border-gray-700">
+                        <td class="py-4 px-2">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 mr-4 bg-gray-900 rounded-lg overflow-hidden">
+                                    {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" class="w-full h-full object-cover" alt="{{ item.product.name }}">
+                                    {% else %}
+                                    <div class="w-full h-full bg-gradient-to-br from-pink-600 to-purple-500"></div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">{{ item.product.name }}</h3>
+                                    <p class="text-gray-400 text-sm">{{ item.product.tagline|truncatechars:30 }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-2 text-center text-white">{{ item.quantity }}</td>
+                        <td class="py-4 px-2 text-right text-white">${{ item.price }}</td>
+                        <td class="py-4 px-2 text-right text-pink-400 font-bold">${{ item.total_price }}</td>
+                        <td class="py-4 px-2 text-right">
+                            <a href="{% url 'store:remove_from_cart' item.product.id %}" class="text-gray-400 hover:text-pink-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Cart Summary -->
+        <div class="md:w-1/2 bg-gray-800 rounded-xl p-6">
+            <h2 class="text-xl font-bold text-white mb-4">Cart Summary</h2>
+            <div class="flex justify-between text-gray-400 mb-2">
+                <span>Subtotal</span>
+                <span>${{ total_price }}</span>
+            </div>
+            <div class="flex justify-between text-gray-400 mb-2">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+            <div class="flex justify-between text-pink-400 font-bold text-lg pt-4 border-t border-gray-700 mt-4">
+                <span>Total</span>
+                <span>${{ total_price }}</span>
+            </div>
+        </div>
+        
+        <!-- Checkout Button -->
+        <div class="md:w-1/2 flex flex-col">
+            <a href="{% url 'store:checkout' %}" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-4 rounded-xl font-bold text-center transition mb-4">
+                Proceed to Checkout
+            </a>
+            <a href="{% url 'store:product_list' %}" class="text-pink-400 hover:text-pink-500 px-6 py-4 rounded-xl border border-pink-400 text-center transition">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-gray-800 rounded-xl p-12 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto mb-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <h2 class="text-2xl font-bold text-white mb-4">Your cart is empty</h2>
+        <p class="text-gray-400 mb-8">Looks like you haven't added any products to your cart yet.</p>
+        <a href="{% url 'store:product_list' %}" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-xl font-bold inline-block transition">
+            Browse Products
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -31,17 +31,23 @@
                 {% endfor %}
             </div>
             <div class="flex space-x-4 items-center">
-                <a href="{% url 'login' %}" class="text-gray-300 hover:text-pink-500">
-                    <i class="fa-solid fa-user"></i>
-                </a>      
+
+
                 <a href="{% url 'store:saved_items' %}" class="text-gray-300 hover:text-pink-500">
                     <i class="fa-solid fa-heart"></i>
                 </a>          
                 <a href="{% url 'store:search' %}" class="text-gray-300 hover:text-pink-500">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </a>
-                <a href="{% url 'store:checkout' %}" class="text-gray-300 hover:text-pink-500">
+                <a href="{% url 'store:cart_detail' %}" class="text-gray-300 hover:text-pink-500 relative">
                     <i class="fa-solid fa-cart-shopping"></i>
+                    {% with total_items=request.session.cart.items|length %}
+                        {% if total_items > 0 %}
+                            <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                {{ total_items }}
+                            </span>
+                        {% endif %}
+                    {% endwith %}
                 </a>
             </div>
         </div>
