@@ -7,3 +7,5 @@ numpy
 whitenoise
 psycopg
 Pillow
+boto3
+django-storages
