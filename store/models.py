@@ -1,6 +1,7 @@
 # store/models.py
 from django.db import models
 from django.urls import reverse
+from storages.backends.s3boto3 import S3Boto3Storage
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -29,6 +30,7 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, related_name='products', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
+    # The image field remains the same - Django will use the configured S3 storage
     image = models.ImageField(upload_to='products/')
     description = models.TextField()
     tagline = models.CharField(max_length=200, blank=True, help_text="Short description for product card (e.g. 'Signature crystal accent')")

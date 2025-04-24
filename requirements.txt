@@ -1,11 +1,11 @@
 Django
-psycopg2-binary  # If using PostgreSQL, otherwise comment this out if you're using SQLite.
 
 dj-database-url
-pydub
-sqlparse
+
+opencv-python 
+numpy
 whitenoise
-django-storages==1.13.2
-b2sdk==1.19.0
-boto3
+psycopg
 Pillow
+boto3
+django-storages
