@@ -7,3 +7,7 @@ numpy
 whitenoise
 psycopg
 Pillow
+gunicorn 
+psycopg2-binary 
+whitenoise 
+django-environ

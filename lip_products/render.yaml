@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: django-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn lip_products.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: lip_products.settings
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ev5
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
