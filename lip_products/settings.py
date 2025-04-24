@@ -117,7 +117,7 @@ USE_I18N = True
 USE_TZ = True
 import dj_database_url
 
-DATABASES["default"] = dj_database_url.parse("postgresql://evolvee2_user:yYsJmprvaoHSkeAxWoyhclsiAc69LfAY@dpg-d04o6r8dl3ps73dibjgg-a.oregon-postgres.render.com/evolvee2")
+DATABASES["default"] = dj_database_url.parse("postgresql://evolvee4_user:zpGIXwhd1wfaO8gXWwRbUpoTKn8gVSCB@dpg-d04ou91r0fns73cn1k6g-a.oregon-postgres.render.com/evolvee4")
 
 
 # Static files (CSS, JavaScript, Images)
@@ -142,3 +142,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = '004fa1fd01512920000000002'  # This is your keyID
+AWS_SECRET_ACCESS_KEY = 'K004cHeOJumlimaiKpYWeZrm5HLBzkE'  # This is your applicationKey
+AWS_STORAGE_BUCKET_NAME = 'learnlinguo'  # Make sure this is your actual bucket name
+AWS_S3_ENDPOINT_URL = 'https://s3.us-west-004.backblazeb2.com'  # Adjust if your bucket is in a different region
+AWS_S3_REGION_NAME = 'us-west-002'  # Adjust if your bucket is in a different region
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
