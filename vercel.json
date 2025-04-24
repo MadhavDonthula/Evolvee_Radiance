@@ -1,25 +1,28 @@
 {
-    "builds": [
-      {
-        "src": "lip_products/wsgi.py",
-        "use": "@vercel/python"
-      },
-      {
-        "src": "build_files.sh",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "staticfiles"
-        }
+  "builds": [
+    {
+      "src": "lip_products/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "excludeFiles": ["venv/**", "**/*.pyc", "**/__pycache__/**", "staticfiles/**", "media/**", ".git/**"]
       }
-    ],
-    "routes": [
-      {
-        "src": "/static/(.*)",
-        "dest": "/static/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "lip_products/wsgi.py"
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
       }
-    ]
-  }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "lip_products/wsgi.py"
+    }
+  ]
+}
