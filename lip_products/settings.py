@@ -133,16 +133,6 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # or another directory of your choice
 
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = '004fa1fd01512920000000002'  # This is your keyID
-AWS_SECRET_ACCESS_KEY = 'K004cHeOJumlimaiKpYWeZrm5HLBzkE'  # This is your applicationKey
-AWS_STORAGE_BUCKET_NAME = 'learnlinguo'  # Make sure this is your actual bucket name
-AWS_S3_ENDPOINT_URL = 'https://s3.us-west-004.backblazeb2.com'  # Adjust if your bucket is in a different region
-AWS_S3_REGION_NAME = 'us-west-002'  # Adjust if your bucket is in a different region
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -151,5 +141,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
