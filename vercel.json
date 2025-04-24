@@ -1,38 +1,13 @@
 {
-  "builds": [
-    {
+  "builds": [{
       "src": "lip_products/wsgi.py",
       "use": "@vercel/python",
-      "config": {
-        "excludeFiles": [
-          "venv/**", 
-          "**/*.pyc", 
-          "**/__pycache__/**", 
-          ".git/**", 
-          "*.sqlite3",
-          "*.db",
-          "node_modules/**",
-          "tests/**",
-          "docs/**"
-        ]
-      }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles"
-      }
-    }
-  ],
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+  }],
   "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "lip_products/wsgi.py"
-    }
+      {
+          "src": "/(.*)",
+          "dest": "lip_products/wsgi.py"
+      }
   ]
 }
