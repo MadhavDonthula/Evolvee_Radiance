@@ -7,7 +7,7 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: lip_products.settings
-      - key: DATABASE_URL
+      - key: postgresql://ev5_user:jrjwMQbZvJSEsGhKIAn1nSWaQeEdgzZj@dpg-d04rt5p5pdvs73acibh0-a.oregon-postgres.render.com/ev5
         fromDatabase:
           name: ev5
           property: connectionString
