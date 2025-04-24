@@ -1,7 +1,6 @@
 # store/models.py
 from django.db import models
 from django.urls import reverse
-from storages.backends.s3boto3 import S3Boto3Storage
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
