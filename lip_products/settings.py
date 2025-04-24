@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-ppeogi-uem+i-vqx1arm7_2e&2ba)a5g72)w&yw^dyvg9bgj@k
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
-#good#
+
 
 # Application definition
 
@@ -117,7 +117,7 @@ USE_I18N = True
 USE_TZ = True
 import dj_database_url
 
-DATABASES["default"] = dj_database_url.parse("postgresql://ev5_user:jrjwMQbZvJSEsGhKIAn1nSWaQeEdgzZj@dpg-d04rt5p5pdvs73acibh0-a.oregon-postgres.render.com/ev5")
+DATABASES["default"] = dj_database_url.parse("postgresql://evolvee6_owner:npg_lnyW0pLRE2TD@ep-falling-smoke-a49b4303-pooler.us-east-1.aws.neon.tech/evolvee6?sslmode=require")
 
 
 # Static files (CSS, JavaScript, Images)
