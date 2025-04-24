@@ -6,4 +6,3 @@ opencv-python
 numpy
 whitenoise
 psycopg
-Pillow
