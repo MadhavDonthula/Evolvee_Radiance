@@ -12,8 +12,6 @@ from decimal import Decimal
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.conf import settings
-
 
 class CreateUserForm(UserCreationForm):
     class Meta:
