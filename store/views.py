@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from decimal import Decimal
+from django.views.decorators.csrf import csrf_protect
 
 # Create a custom form that extends UserCreationForm
 from django.contrib.auth.forms import UserCreationForm
@@ -139,3 +140,50 @@ def cart_detail(request):
         'cart_items': cart_items,
         'total_price': total_price
     })
+
+@csrf_protect
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('store:home')  # Replace with your homepage view name
+    
+    form = UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Account created successfully.")
+            return redirect('store:login')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    
+    return render(request, 'register.html', {'form': form})
+
+# Login View
+@csrf_protect
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('store:home')  # Replace with your homepage view name
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        if username and password:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Welcome back, {user.username}!')
+                return redirect('store:product_list')  # Replace with your homepage view name
+            else:
+                messages.error(request, 'Invalid username or password.')
+        else:
+            messages.error(request, 'Please fill in all fields.')
+    
+    return render(request, 'login.html')
+
+# Logout View
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('store:login')

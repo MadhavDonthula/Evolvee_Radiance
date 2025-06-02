@@ -52,6 +52,7 @@
         top: 50%;
         transform: translateY(-50%);
         color: #a0aec0;
+        z-index: 10;
       }
       .form-input {
         border: 1px solid #e2e8f0;
@@ -108,7 +109,8 @@
               type="text"
               name="username"
               placeholder="Username..."
-              class="form-input" />
+              class="form-input"
+              required />
           </div>
           <div class="input-group mb-6">
             <i class="fas fa-lock input-icon"></i>
@@ -116,7 +118,8 @@
               type="password"
               name="password"
               placeholder="Password..."
-              class="form-input" />
+              class="form-input"
+              required />
           </div>
           <button
             type="submit"

@@ -103,12 +103,12 @@ import environ
 
 # Initialize environment variables
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, True)
 )
 environ.Env.read_env(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATABASE_URL = "postgresql://ev5_user:jrjwMQbZvJSEsGhKIAn1nSWaQeEdgzZj@dpg-d04rt5p5pdvs73acibh0-a.oregon-postgres.render.com/ev5"
+DATABASE_URL = "postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance"
 SECRET_KEY = 'ys-optx20q8kkmq$6z_z2dh6($d7y=@2q7b%_yzv20+fke*i05'
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['*']
@@ -129,7 +129,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Must be just after SecurityMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    'django.middleware.csrf.CsrfViewMiddleware',
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -148,6 +148,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                        'store.context_processors.categories',  # Add this line
+
             ],
         },
     },
@@ -156,7 +158,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "lip_products.wsgi.application"
 
 DATABASES = {
-    "default": env.db(default="postgresql://ev5_user:jrjwMQbZvJSEsGhKIAn1nSWaQeEdgzZj@dpg-d04rt5p5pdvs73acibh0-a.oregon-postgres.render.com/ev5"),
+    "default": env.db(default="postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance"),
 }
 
 
