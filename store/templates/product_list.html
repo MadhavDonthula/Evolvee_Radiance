@@ -367,12 +367,7 @@
     <nav class="navbar sticky top-0 py-5 px-4 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <a href="{% url 'store:product_list' %}" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Evolvée Radiance</a>
-            
-            <div class="hidden md:flex space-x-8">
-                {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="nav-link text-gray-300 hover:text-pink-500 font-medium">{{ c.name }}</a>
-                {% endfor %}
-            </div>
+    
             
             <div class="flex space-x-6 items-center">
     
