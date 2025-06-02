@@ -8,9 +8,9 @@ app_name = 'store'
 urlpatterns = [
     # Existing URLs
     path('', views.product_list, name='product_list'),
-    # path('login/', views.loginPage, name='login'),
-    # path('register/', views.registerPage, name='register'),
-    # path('logout/', views.logoutUser, name='logout'),
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('category/<slug:category_slug>/', views.product_list, name='product_list_by_category'),
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
     path('search/', views.search, name='search'),
