@@ -420,20 +420,6 @@
                         <a href="#" class="btn-primary inline-block carousel-button">Shop Now</a>
                     </div>
                 </div>
-                
-                {% for product in featured_products %}
-                <div class="carousel-slide">
-                    {% if product.image %}
-                    <img src="{{ product.image.url }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ product.name }}">
-                    {% endif %}
-                    <div class="carousel-overlay"></div>
-                    <div class="carousel-content">
-                        <h1 class="carousel-title">{{ product.name }}</h1>
-                        <p class="carousel-subtitle">{{ product.description|truncatewords:15 }}</p>
-                        <a href="{{ product.get_absolute_url }}" class="btn-primary inline-block carousel-button">View Product</a>
-                    </div>
-                </div>
-                {% endfor %}
             </div>
             
             <!-- Hero Carousel Navigation Dots -->
