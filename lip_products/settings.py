@@ -96,22 +96,29 @@
 
 #### NEWW####
 
-
 import os
 from pathlib import Path
 import environ
+import dj_database_url
 
 # Initialize environment variables
 env = environ.Env(
-    DEBUG=(bool, True)
+    DEBUG=(bool, False)
 )
-environ.Env.read_env(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
+
+# Read .env file if it exists (for local development)
+env_file = os.path.join(Path(__file__).resolve().parent.parent, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATABASE_URL = "postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance"
-SECRET_KEY = 'ys-optx20q8kkmq$6z_z2dh6($d7y=@2q7b%_yzv20+fke*i05'
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = ['*']
+
+# Get sensitive data from environment variables with hardcoded fallbacks
+SECRET_KEY = env('SECRET_KEY', default='ys-optx20q8kkmq$6z_z2dh6($d7y=@2q7b%_yzv20+fke*i05')
+DEBUG = env('DEBUG', default=True)
+
+# Handle ALLOWED_HOSTS for Render deployment
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*', 'lip-products.onrender.com', 'localhost', '127.0.0.1'])
 
 # Application definition
 INSTALLED_APPS = [
@@ -126,7 +133,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Must be just after SecurityMiddleware
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -148,8 +155,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                        'store.context_processors.categories',  # Add this line
-
+                'store.context_processors.categories',
             ],
         },
     },
@@ -157,10 +163,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "lip_products.wsgi.application"
 
-DATABASES = {
-    "default": env.db(default="postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance"),
-}
+# Database configuration with hardcoded fallback
+DATABASE_URL = env('DATABASE_URL', default='postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance')
 
+# Use dj_database_url to parse the URL properly
+DATABASES = {
+    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -176,11 +185,12 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JS, Images)
+# Static files configuration for Render
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Use WhiteNoise for static files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
@@ -189,3 +199,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
