@@ -38,18 +38,41 @@ def product_list(request, category_slug=None):
         'featured_products': featured_products
     })
 
+from .models import SavedItem
+from django.contrib.auth.decorators import login_required
+
+from .models import SavedItem
+
+@login_required
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, available=True)
-    
-    # Get related products
-    related_products = Product.objects.filter(
-        Q(category=product.category) | Q(collection=product.collection)
-    ).exclude(id=product.id).filter(available=True)[:4]
-    
+    product = get_object_or_404(Product, slug=slug)
+    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+
+    is_saved = SavedItem.objects.filter(user=request.user, product=product).exists()
+
     return render(request, 'product_detail.html', {
         'product': product,
-        'related_products': related_products
+        'related_products': related_products,
+        'is_saved': is_saved,
     })
+
+# store/views.py
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Product, SavedItem
+
+@login_required
+def toggle_save_item(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product = Product.objects.get(id=product_id)
+        saved_item, created = SavedItem.objects.get_or_create(user=request.user, product=product)
+
+        if not created:
+            saved_item.delete()
+            return JsonResponse({'saved': False})
+        return JsonResponse({'saved': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def search(request):
     return render(request, 'search.html')
@@ -57,8 +80,10 @@ def search(request):
 def checkout(request):
     return render(request, 'checkout.html')
 
+@login_required
 def saved_items(request):
-    return render(request, 'saved_items.html')
+    saved = SavedItem.objects.filter(user=request.user).select_related('product')
+    return render(request, 'saved_items.html', {'saved_items': saved})
 
 
 
