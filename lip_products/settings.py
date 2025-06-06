@@ -164,7 +164,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "lip_products.wsgi.application"
 
 # Database configuration with hardcoded fallback
-DATABASE_URL = env('DATABASE_URL', default='postgresql://tester_fktr_user:4vmgIiqdtpr4zggz1X24rntMk6x3A3VA@dpg-d113df95pdvs73eidi20-a.oregon-postgres.render.com/tester_fktr')
+DATABASE_URL = env('DATABASE_URL', default='postgresql://evolveeradiance_user:3mxBgJwmpONRRt04WU1xJ6dJmyZPcSzG@dpg-ctrkg49opnds73dt1j90-a.virginia-postgres.render.com/evolveeradiance')
 
 # Use dj_database_url to parse the URL properly
 DATABASES = {
