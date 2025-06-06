@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Saved Items{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl text-pink-500 font-bold mb-6">Your Saved Items</h1>
+    {% if saved_items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for saved in saved_items %}
+        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-md">
+            <a href="{{ saved.product.get_absolute_url }}">
+                <div class="p-4">
+                    {% if saved.product.image %}
+                    <img src="{{ saved.product.image.url }}" class="h-48 object-contain w-full mb-4" alt="{{ saved.product.name }}">
+                    {% endif %}
+                    <h2 class="text-white font-semibold text-lg mb-1">{{ saved.product.name }}</h2>
+                    <p class="text-gray-400 text-sm">{{ saved.product.tagline }}</p>
+                    <p class="text-pink-400 font-bold mt-2">${{ saved.product.price }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-400">You have no saved items.</p>
+    {% endif %}
+</div>
+{% endblock %}
