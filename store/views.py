@@ -1,6 +1,6 @@
 # store/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Collection, Product
+from .models import Category, Product, SavedItem
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from decimal import Decimal
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_POST
 
 # Create a custom form that extends UserCreationForm
 from django.contrib.auth.forms import UserCreationForm
@@ -22,7 +23,6 @@ class CreateUserForm(UserCreationForm):
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
-    collections = Collection.objects.all()
     products = Product.objects.filter(available=True)
     featured_products = Product.objects.filter(available=True, is_featured=True)[:4]
     
@@ -33,15 +33,9 @@ def product_list(request, category_slug=None):
     return render(request, 'product_list.html', {
         'category': category,
         'categories': categories,
-        'collections': collections,
         'products': products,
         'featured_products': featured_products
     })
-
-from .models import SavedItem
-from django.contrib.auth.decorators import login_required
-
-from .models import SavedItem
 
 @login_required
 def product_detail(request, slug):
@@ -59,7 +53,6 @@ def product_detail(request, slug):
 # store/views.py
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Product, SavedItem
 
 @login_required
 def toggle_save_item(request):
@@ -93,7 +86,7 @@ def get_cart(request):
     if 'cart' not in request.session:
         request.session['cart'] = {}
     return request.session['cart']
-
+@csrf_protect
 def add_to_cart(request, product_id):
     """Add a product to the cart"""
     product = get_object_or_404(Product, id=product_id, available=True)
@@ -169,15 +162,17 @@ def cart_detail(request):
 @csrf_protect
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('store:home')  # Replace with your homepage view name
+        return redirect('store:product_list')  # Homepage
     
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "Account created successfully.")
-            return redirect('store:login')
+            # Automatically log in the user after successful registration
+            login(request, user)
+            messages.success(request, f'Welcome, {user.username}! Your account has been created successfully.')
+            return redirect('store:product_list')  # Redirect to homepage instead of login
         else:
             messages.error(request, "Please correct the errors below.")
     
@@ -187,7 +182,7 @@ def register_view(request):
 @csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('store:home')  # Replace with your homepage view name
+        return redirect('store:product_list')  # Homepage
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -208,7 +203,23 @@ def login_view(request):
 
 # Logout View
 @login_required
+@require_POST
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
     return redirect('store:login')
+
+@csrf_protect
+def category_products_page(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    products = Product.objects.filter(category=category, available=True)
+    categories = Category.objects.all()
+    return render(request, 'products_page.html', {
+        'category': category,
+        'products': products,
+        'categories': categories,
+    })
+
+@login_required
+def about_view(request):
+    return render(request, 'about_us.html')
