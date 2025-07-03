@@ -43,6 +43,72 @@
     </style>
 </head>
 <body>
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fade-in-up">
+            <button id="close-login-modal" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-2xl">&times;</button>
+            
+            <!-- Login Form -->
+            <div id="login-form-container">
+                <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800">LOGIN</h2>
+                <form id="login-form" method="POST" action="{% url 'store:login' %}" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="input-group mb-4 relative">
+                        <i class="fas fa-user input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="username" placeholder="Username..." class="form-input pl-10 py-3 w-full rounded-lg border border-gray-300 focus:border-pink-500 text-black" required />
+                    </div>
+                    <div class="input-group mb-4 relative">
+                        <i class="fas fa-lock input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" name="password" placeholder="Password..." class="form-input pl-10 py-3 w-full rounded-lg border border-gray-300 focus:border-pink-500 text-black" required />
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-bold text-lg transition">Login</button>
+                </form>
+                <div id="login-error" class="text-red-500 text-center mt-4 hidden"></div>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Don't have an account?
+                        <button id="show-signup" class="text-pink-500 hover:underline font-semibold">Sign Up</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form-container" class="hidden">
+                <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800">SIGN UP</h2>
+                <form id="signup-form" method="POST" action="{% url 'store:register' %}" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="input-group mb-4 relative">
+                        <i class="fas fa-user input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="username" placeholder="Username..." class="form-input pl-10 py-3 w-full rounded-lg border border-gray-300 focus:border-pink-500 text-black" required />
+                    </div>
+                    <div class="input-group mb-4 relative">
+                        <i class="fas fa-lock input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" name="password1" placeholder="Password..." class="form-input pl-10 py-3 w-full rounded-lg border border-gray-300 focus:border-pink-500 text-black" required />
+                    </div>
+                    <div class="input-group mb-4 relative">
+                        <i class="fas fa-lock input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" name="password2" placeholder="Confirm Password..." class="form-input pl-10 py-3 w-full rounded-lg border border-gray-300 focus:border-pink-500 text-black" required />
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-bold text-lg transition">Sign Up</button>
+                </form>
+                <div id="signup-error" class="text-red-500 text-center mt-4 hidden"></div>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account?
+                        <button id="show-login" class="text-pink-500 hover:underline font-semibold">Login</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-gray-900 rounded-2xl shadow-2xl max-w-3xl w-full p-8 relative animate-fade-in-up">
+            <button id="close-cart-modal" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-2xl">&times;</button>
+            <h2 class="text-3xl font-bold text-pink-500 mb-8 text-center">Your Shopping Cart</h2>
+            <div id="cart-modal-content">
+                <!-- Cart content will be loaded here via AJAX or server-side include -->
+            </div>
+        </div>
+    </div>
     <nav class="bg-white shadow-sm p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-400">Evolvée Radiance</a>
@@ -56,10 +122,13 @@
             <div class="flex space-x-5 items-center">
                 {% if user.is_authenticated %}
                     <span class="text-gray-700 font-medium">Hi, {{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="text-gray-700 hover:text-pink-500 font-medium nav-link">Logout</a>
+                    <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="text-gray-700 hover:text-pink-500 font-medium nav-link bg-transparent border-none cursor-pointer">Logout</button>
+                    </form>
+                    <a href="{% url 'store:about' %}" class="ml-4 text-gray-700 hover:text-pink-500 font-medium nav-link">About Us</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-gray-700 hover:text-pink-500 font-medium nav-link">Login</a>
-                    <a href="{% url 'signup' %}" class="text-gray-700 hover:text-pink-500 font-medium nav-link">Signup</a>
+                    <button id="login-navbar-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow transition-all nav-link" style="margin-left: 0.5rem;">Login / Sign Up</button>
                 {% endif %}
 
                 <a href="{% url 'store:saved_items' %}" class="text-gray-700 hover:text-pink-500 transition-colors">
@@ -106,10 +175,119 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', function() {
                     mobileMenu.classList.toggle('hidden');
+                });
+            }
+            // Modal logic
+            const loginModal = document.getElementById('login-modal');
+            const cartModal = document.getElementById('cart-modal');
+            const closeLoginModal = document.getElementById('close-login-modal');
+            const closeCartModal = document.getElementById('close-cart-modal');
+            // Open login modal on login button click
+            const loginBtn = document.getElementById('login-navbar-btn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loginModal.classList.remove('hidden');
+                });
+            }
+            // Open cart modal on cart icon click
+            document.querySelectorAll('a[href$="cart_detail"], a[href$="/cart/"]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    cartModal.classList.remove('hidden');
+                    // Optionally, load cart content via AJAX here
+                });
+            });
+            // Close modals
+            closeLoginModal.addEventListener('click', function() { loginModal.classList.add('hidden'); });
+            closeCartModal.addEventListener('click', function() { cartModal.classList.add('hidden'); });
+            // Close on background click
+            loginModal.addEventListener('click', function(e) { if (e.target === loginModal) loginModal.classList.add('hidden'); });
+            cartModal.addEventListener('click', function(e) { if (e.target === cartModal) cartModal.classList.add('hidden'); });
+            // Intercept login form to handle errors in the modal
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    loginError.classList.add('hidden');
+                    const formData = new FormData(loginForm);
+                    const response = await fetch(loginForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        const html = await response.text();
+                        // Try to extract error message from the returned HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const errorMsg = doc.querySelector('.errorlist, #messages, .text-red-500');
+                        if (errorMsg) {
+                            loginError.innerHTML = errorMsg.innerHTML || errorMsg.textContent;
+                            loginError.classList.remove('hidden');
+                        } else {
+                            loginError.innerHTML = 'Login failed. Please try again.';
+                            loginError.classList.remove('hidden');
+                        }
+                    }
+                });
+            }
+
+            // Intercept signup form to handle errors in the modal
+            const signupForm = document.getElementById('signup-form');
+            const signupError = document.getElementById('signup-error');
+            if (signupForm) {
+                signupForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    signupError.classList.add('hidden');
+                    const formData = new FormData(signupForm);
+                    const response = await fetch(signupForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        const html = await response.text();
+                        // Try to extract error message from the returned HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const errorMsg = doc.querySelector('.errorlist, #messages, .text-red-500');
+                        if (errorMsg) {
+                            signupError.innerHTML = errorMsg.innerHTML || errorMsg.textContent;
+                            signupError.classList.remove('hidden');
+                        } else {
+                            signupError.innerHTML = 'Signup failed. Please try again.';
+                            signupError.classList.remove('hidden');
+                        }
+                    }
+                });
+            }
+
+            // Toggle between login and signup forms
+            const showSignupBtn = document.getElementById('show-signup');
+            const showLoginBtn = document.getElementById('show-login');
+            const loginContainer = document.getElementById('login-form-container');
+            const signupContainer = document.getElementById('signup-form-container');
+
+            if (showSignupBtn) {
+                showSignupBtn.addEventListener('click', function() {
+                    loginContainer.classList.add('hidden');
+                    signupContainer.classList.remove('hidden');
+                });
+            }
+
+            if (showLoginBtn) {
+                showLoginBtn.addEventListener('click', function() {
+                    signupContainer.classList.add('hidden');
+                    loginContainer.classList.remove('hidden');
                 });
             }
         });

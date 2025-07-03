@@ -23,4 +23,6 @@ urlpatterns = [
     path('cart/remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('save-product/', views.toggle_save_item, name='toggle_save_item'),
 
+    path('category/<slug:category_slug>/products/', views.category_products_page, name='category_products_page'),
+    path('about/', views.about_view, name='about'),
 ]

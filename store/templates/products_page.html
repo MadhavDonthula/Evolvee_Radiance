@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} - Evolvée Radiance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #2d1537;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .brand-font { font-family: 'Playfair Display', serif; }
+        .category-title {
+            color: #e16b8c;
+            font-size: 2rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+        }
+        .product-card {
+            background: #1a0823;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 8px 32px 0 rgba(226,107,140,0.25), 0 1.5px 8px 0 rgba(162,89,198,0.15);
+            z-index: 2;
+        }
+        .product-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px 0 rgba(226,107,140,0.15);
+        }
+        .product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 1rem;
+            background: #fff;
+            margin-bottom: 1rem;
+        }
+        .in-stock {
+            background: #22c55e;
+            color: #fff;
+            border-radius: 1rem;
+            padding: 0.2rem 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .out-of-stock {
+            background: #ef4444;
+            color: #fff;
+            border-radius: 1rem;
+            padding: 0.2rem 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .add-to-cart-btn {
+            background: #e16b8c;
+            color: #fff;
+            border-radius: 1rem;
+            padding: 0.5rem 1.5rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .add-to-cart-btn:hover {
+            background: #a259c6;
+        }
+        .search-btn { background: #a259c6; color: #fff; border-radius: 1rem; padding: 0.5rem 2rem; font-size: 1.2rem; }
+        .search-btn:hover { background: #e16b8c; }
+    </style>
+</head>
+<body>
+    <!-- Navbar/Header (reuse from homepage if needed) -->
+    <nav class="flex items-center justify-between px-4 py-3 bg-white bg-opacity-90 shadow-md sticky top-0 z-50">
+        <div class="flex items-center">
+            <button class="mr-4 text-2xl text-gray-800 focus:outline-none"><i class="fas fa-bars"></i></button>
+            <span class="hidden md:inline-block text-lg text-gray-700 font-semibold">Menu</span>
+        </div>
+        <a href="/" class="flex-1 text-center">
+            <span class="brand-font brand-gradient text-2xl font-bold tracking-wide">Evolvée Radiance</span>
+        </a>
+        <div class="flex items-center space-x-6">
+            <a href="{% url 'store:saved_items' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-heart"></i></a>
+            <a href="{% url 'store:cart_detail' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="{% url 'store:login' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="flex justify-center mt-6 mb-8 z-20 relative">
+        <form action="" method="get" class="flex w-full max-w-md">
+            <input type="text" name="q" placeholder="Search" class="flex-1 px-6 py-3 rounded-l-full bg-white text-gray-800 focus:outline-none" />
+            <button type="submit" class="search-btn rounded-r-full">Search</button>
+        </form>
+    </div>
+
+    <!-- Category Title -->
+    <div class="text-center mb-8">
+        <div class="category-title">{{ category.name }}</div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for product in products %}
+        <div class="product-card"
+            data-id="{{ product.id }}"
+            data-name="{{ product.name|escapejs }}"
+            data-price="{{ product.price }}"
+            data-stock="{{ product.stock }}"
+            data-image-url="{{ product.image.url }}"
+            data-tagline="{{ product.tagline|escapejs }}"
+            data-description="{{ product.description|escapejs }}">
+            {% if product.stock > 0 %}
+                <div class="in-stock">In stock</div>
+            {% else %}
+                <div class="out-of-stock">Out of stock</div>
+            {% endif %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            <div class="font-bold text-lg mb-1">{{ product.name }}</div>
+            <div class="text-gray-300 mb-1">{{ product.tagline }}</div>
+            <div class="text-xl font-bold mb-1">${{ product.price }}</div>
+            <div class="flex items-center justify-between w-full">
+                <span class="text-gray-400">Stock: {{ product.stock }}</span>
+                <a href="{{ product.get_absolute_url }}" class="text-gray-400"><i class="fa-regular fa-heart"></i></a>
+            </div>
+            <button class="add-to-cart-btn mt-2">Add to cart</button>
+        </div>
+        {% empty %}
+        <div class="col-span-2 text-center text-lg text-gray-300">No products found in this category.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Products by Category (bottom) -->
+    <section class="max-w-5xl mx-auto mt-12 mb-12">
+        <div class="text-center mb-6">
+            <span class="brand-font text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 1rem; padding: 0.5rem 2rem;">PRODUCTS BY CATEGORY</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for cat in categories %}
+            <a href="/category/{{ cat.slug }}/products/" class="category-card flex flex-col items-center p-6 text-center">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="w-40 h-40 object-cover rounded-xl mb-4 border-4 border-purple-200">
+                {% else %}
+                    <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ cat.name }}" class="w-40 h-40 object-cover rounded-xl mb-4 border-4 border-purple-200">
+                {% endif %}
+                <span class="brand-font text-2xl mb-2" style="color: #e16b8c;">{{ cat.name|title }}</span>
+            </a>
+            {% empty %}
+            <div class="col-span-2 text-center text-lg text-gray-300">No categories available.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Product Detail Modal (hidden by default) -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-2xl">&times;</button>
+            <div id="modal-content">
+                <!-- Content will be injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get CSRF token from Django
+        const CSRF_TOKEN = '{{ csrf_token }}';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal logic
+            const modal = document.getElementById('product-modal');
+            const closeModal = document.getElementById('close-modal');
+            const modalContent = document.getElementById('modal-content');
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Prevent click on Add to cart button from opening modal
+                    if (e.target.closest('.add-to-cart-btn')) return;
+                    
+                    const product = {
+                        id: card.getAttribute('data-id'),
+                        name: card.getAttribute('data-name'),
+                        price: card.getAttribute('data-price'),
+                        stock: card.getAttribute('data-stock'),
+                        image_url: card.getAttribute('data-image-url'),
+                        tagline: card.getAttribute('data-tagline'),
+                        description: card.getAttribute('data-description')
+                    };
+                    
+                    modalContent.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="flex items-center justify-center">
+                                <div class="bg-gray-800 p-4 rounded-xl w-full">
+                                    <img src="${product.image_url}" class="w-full h-auto object-contain rounded-lg" style="max-height: 320px;" alt="${product.name}">
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h1 class="text-3xl font-bold text-white mb-4">${product.name}</h1>
+                                <div class="mb-6">
+                                    <p class="text-gray-300 text-lg">${product.tagline || ''}</p>
+                                </div>
+                                <div class="mb-8">
+                                    <h2 class="text-xl font-semibold text-pink-400 mb-2">Description</h2>
+                                    <p class="text-gray-300">${product.description || ''}</p>
+                                </div>
+                                <div class="flex items-center justify-between mb-8">
+                                    <div class="text-3xl font-bold text-pink-500">$${product.price}</div>
+                                    <div>
+                                        ${product.stock > 0 ? `<span class='bg-green-500 text-white px-3 py-1 rounded-full'>In Stock (${product.stock} available)</span>` : `<span class='bg-red-500 text-white px-3 py-1 rounded-full'>Out of Stock</span>`}
+                                    </div>
+                                </div>
+                                ${product.stock > 0 ? `
+                                <form method="post" action="/cart/add/${product.id}/" class="flex items-center mb-6">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="${CSRF_TOKEN}">
+                                    <div class="flex items-center bg-gray-900 rounded-l-lg">
+                                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="decrease">-</button>
+                                        <input type="number" name="quantity" min="1" max="${product.stock}" value="1" class="w-12 text-center bg-gray-900 text-white border-0 focus:outline-none" id="modal-quantity">
+                                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="increase">+</button>
+                                    </div>
+                                    <button type="submit" class="flex-1 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-r-lg transition">Add to Cart</button>
+                                </form>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    modal.classList.remove('hidden');
+                    
+                    // Quantity logic in modal
+                    const quantityInput = document.getElementById('modal-quantity');
+                    if (quantityInput) {
+                        const btns = modalContent.querySelectorAll('.quantity-btn');
+                        btns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const action = btn.getAttribute('data-action');
+                                const currentValue = parseInt(quantityInput.value);
+                                const maxValue = parseInt(quantityInput.getAttribute('max'));
+                                if (action === 'increase' && currentValue < maxValue) {
+                                    quantityInput.value = currentValue + 1;
+                                } else if (action === 'decrease' && currentValue > 1) {
+                                    quantityInput.value = currentValue - 1;
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
