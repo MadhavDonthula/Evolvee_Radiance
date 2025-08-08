@@ -42,6 +42,11 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    shopify_variant_id = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Paste the Shopify Variant ID (from Shopify admin URL)"
+    )
     
     class Meta:
         ordering = ('name',)

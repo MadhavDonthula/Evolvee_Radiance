@@ -1,13 +1,6 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ category.name }} - Evolvée Radiance</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% block content %}
     <style>
         body {
             background: #2d1537;
@@ -15,91 +8,159 @@
             font-family: 'Montserrat', sans-serif;
         }
         .brand-font { font-family: 'Playfair Display', serif; }
+        .search-btn { 
+            background: #a259c6; 
+            color: #fff; 
+            border-radius: 1rem; 
+            padding: 0.5rem 2rem; 
+            font-size: 1.2rem; 
+            border: none;
+            transition: background 0.3s ease;
+        }
+        .search-btn:hover { 
+            background: #e16b8c; 
+        }
         .category-title {
-            color: #e16b8c;
-            font-size: 2rem;
             font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #a259c6, #e16b8c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
         }
         .product-card {
             background: #1a0823;
             border-radius: 1.5rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
             padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
         .product-card:hover {
-            transform: translateY(-8px) scale(1.04);
+            transform: translateY(-6px) scale(1.03);
             box-shadow: 0 8px 32px 0 rgba(226,107,140,0.25), 0 1.5px 8px 0 rgba(162,89,198,0.15);
             z-index: 2;
         }
-        .product-card:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 8px 0 rgba(226,107,140,0.15);
-        }
-        .product-image {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 1rem;
-            background: #fff;
-            margin-bottom: 1rem;
-        }
         .in-stock {
-            background: #22c55e;
-            color: #fff;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
             border-radius: 1rem;
-            padding: 0.2rem 1rem;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
         .out-of-stock {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             background: #ef4444;
-            color: #fff;
+            color: white;
+            padding: 0.25rem 0.75rem;
             border-radius: 1rem;
-            padding: 0.2rem 1rem;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
         .add-to-cart-btn {
-            background: #e16b8c;
-            color: #fff;
+            background: linear-gradient(90deg, #a259c6, #e16b8c);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
             border-radius: 1rem;
-            padding: 0.5rem 1.5rem;
-            margin-top: 0.5rem;
             font-weight: 600;
-            transition: background 0.2s;
             cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
         }
         .add-to-cart-btn:hover {
-            background: #a259c6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(226,107,140,0.4);
         }
-        .search-btn { background: #a259c6; color: #fff; border-radius: 1rem; padding: 0.5rem 2rem; font-size: 1.2rem; }
-        .search-btn:hover { background: #e16b8c; }
+        .category-card {
+            background: #1a0823;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .category-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 32px 0 rgba(226,107,140,0.25), 0 1.5px 8px 0 rgba(162,89,198,0.15);
+            z-index: 2;
+        }
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(90deg, #a259c6, #e16b8c);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        /* Modal improvements */
+        #product-modal .bg-gray-900 {
+            background: #1a0823 !important;
+        }
+        #product-modal .bg-gray-800 {
+            background: #2d1537 !important;
+        }
+        #product-modal h1, #product-modal h2 {
+            font-family: 'Playfair Display', serif;
+        }
+        #product-modal .rounded-xl, #product-modal .rounded-2xl {
+            border-radius: 2rem !important;
+        }
+        #product-modal .p-4, #product-modal .p-8 {
+            padding: 2rem !important;
+        }
+        #product-modal .text-pink-400, #product-modal .text-pink-500 {
+            color: #e16b8c !important;
+        }
+        #product-modal .bg-pink-500 {
+            background: linear-gradient(90deg, #a259c6, #e16b8c) !important;
+        }
+        #product-modal .bg-green-500 {
+            background: #10b981 !important;
+        }
+        #product-modal .bg-red-500 {
+            background: #ef4444 !important;
+        }
+        #product-modal input[type='number']::-webkit-inner-spin-button,
+        #product-modal input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #product-modal input[type='number'] {
+            -moz-appearance: textfield;
+        }
     </style>
-</head>
-<body>
-    <!-- Navbar/Header (reuse from homepage if needed) -->
-    <nav class="flex items-center justify-between px-4 py-3 bg-white bg-opacity-90 shadow-md sticky top-0 z-50">
-        <div class="flex items-center">
-            <button class="mr-4 text-2xl text-gray-800 focus:outline-none"><i class="fas fa-bars"></i></button>
-            <span class="hidden md:inline-block text-lg text-gray-700 font-semibold">Menu</span>
-        </div>
-        <a href="/" class="flex-1 text-center">
-            <span class="brand-font brand-gradient text-2xl font-bold tracking-wide">Evolvée Radiance</span>
-        </a>
-        <div class="flex items-center space-x-6">
-            <a href="{% url 'store:saved_items' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-heart"></i></a>
-            <a href="{% url 'store:cart_detail' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-cart-shopping"></i></a>
-            <a href="{% url 'store:login' %}" class="text-purple-800 text-xl"><i class="fa-solid fa-user"></i></a>
-        </div>
-    </nav>
-
     <!-- Search Bar -->
     <div class="flex justify-center mt-6 mb-8 z-20 relative">
         <form action="" method="get" class="flex w-full max-w-md">
@@ -107,12 +168,10 @@
             <button type="submit" class="search-btn rounded-r-full">Search</button>
         </form>
     </div>
-
     <!-- Category Title -->
     <div class="text-center mb-8">
         <div class="category-title">{{ category.name }}</div>
     </div>
-
     <!-- Products Grid -->
     <div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         {% for product in products %}
@@ -135,7 +194,7 @@
             <div class="text-xl font-bold mb-1">${{ product.price }}</div>
             <div class="flex items-center justify-between w-full">
                 <span class="text-gray-400">Stock: {{ product.stock }}</span>
-                <a href="{{ product.get_absolute_url }}" class="text-gray-400"><i class="fa-regular fa-heart"></i></a>
+                <button class="like-btn text-gray-400" data-id="{{ product.id }}" aria-label="Save item"><i class="fa-regular fa-heart"></i></button>
             </div>
             <button class="add-to-cart-btn mt-2">Add to cart</button>
         </div>
@@ -143,7 +202,6 @@
         <div class="col-span-2 text-center text-lg text-gray-300">No products found in this category.</div>
         {% endfor %}
     </div>
-
     <!-- Products by Category (bottom) -->
     <section class="max-w-5xl mx-auto mt-12 mb-12">
         <div class="text-center mb-6">
@@ -164,7 +222,6 @@
             {% endfor %}
         </div>
     </section>
-
     <!-- Product Detail Modal (hidden by default) -->
     <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div class="bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
@@ -174,18 +231,95 @@
             </div>
         </div>
     </div>
-
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
     <script>
         // Get CSRF token from Django
         const CSRF_TOKEN = '{{ csrf_token }}';
-        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        function updateCartCounter(delta) {
+            // Find the cart counter span in the navbar and update its value
+            const cartIcon = document.querySelector('a[href$="cart_detail"], a[href$="/cart/"]');
+            if (!cartIcon) return;
+            let counter = cartIcon.querySelector('span');
+            let count = 0;
+            if (counter) {
+                count = parseInt(counter.textContent) || 0;
+                count += delta;
+                counter.textContent = count;
+            } else if (delta > 0) {
+                // Create the counter if it doesn't exist
+                counter = document.createElement('span');
+                counter.className = 'absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
+                counter.textContent = delta;
+                cartIcon.appendChild(counter);
+            }
+        }
         document.addEventListener('DOMContentLoaded', function() {
             // Modal logic
             const modal = document.getElementById('product-modal');
             const closeModal = document.getElementById('close-modal');
             const modalContent = document.getElementById('modal-content');
             const productCards = document.querySelectorAll('.product-card');
-
+            // Like/Save button logic
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = btn.getAttribute('data-id');
+                    fetch('/save-product/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': CSRF_TOKEN,
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: new URLSearchParams({product_id: productId})
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.saved) {
+                            btn.querySelector('i').classList.remove('fa-regular');
+                            btn.querySelector('i').classList.add('fa-solid', 'text-pink-500');
+                            showToast('Saved to your likes!');
+                        } else {
+                            btn.querySelector('i').classList.remove('fa-solid', 'text-pink-500');
+                            btn.querySelector('i').classList.add('fa-regular');
+                            showToast('Removed from your likes.');
+                        }
+                    })
+                    .catch(() => showToast('Could not save item.'));
+                });
+            });
+            // Add to cart button logic (on card)
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = btn.closest('.product-card');
+                    const productId = card.getAttribute('data-id');
+                    fetch(`/cart/add/${productId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': CSRF_TOKEN,
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: new URLSearchParams({quantity: 1})
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            showToast('Added to cart!');
+                            updateCartCounter(1);
+                        } else {
+                            showToast('Could not add to cart.');
+                        }
+                    })
+                    .catch(() => showToast('Could not add to cart.'));
+                });
+            });
+            
             productCards.forEach(card => {
                 card.addEventListener('click', function(e) {
                     // Prevent click on Add to cart button from opening modal
@@ -270,5 +404,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

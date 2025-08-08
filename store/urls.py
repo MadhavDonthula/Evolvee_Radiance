@@ -14,7 +14,7 @@ urlpatterns = [
     path('category/<slug:category_slug>/', views.product_list, name='product_list_by_category'),
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
     path('search/', views.search, name='search'),
-    path('checkout/', views.checkout, name='checkout'),
+    path('checkout/', views.shopify_checkout, name='shopify_checkout'),
     path('saved-items/', views.saved_items, name='saved_items'),
     
     # Cart URLs
@@ -25,4 +25,5 @@ urlpatterns = [
 
     path('category/<slug:category_slug>/products/', views.category_products_page, name='category_products_page'),
     path('about/', views.about_view, name='about'),
+    path('contact/', views.contact_us, name='contact_us'),
 ]
