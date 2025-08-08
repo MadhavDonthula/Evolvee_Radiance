@@ -68,7 +68,25 @@ def toggle_save_item(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def search(request):
-    return render(request, 'search.html')
+    query = request.GET.get('q', '').strip()
+    if query:
+        product = Product.objects.filter(
+            (Q(name__icontains=query) | Q(tagline__icontains=query) | Q(description__icontains=query)),
+            available=True
+        ).select_related('category').first()
+        if product:
+            # Redirect to the category products page for the product's category
+            return redirect('store:category_products_page', category_slug=product.category.slug)
+        else:
+            categories = Category.objects.all()
+            return render(request, 'search.html', {
+                'query': query,
+                'not_found': True,
+                'categories': categories,
+            })
+    else:
+        categories = Category.objects.all()
+        return render(request, 'search.html', {'categories': categories})
 
 def checkout(request):
     return render(request, 'checkout.html')
@@ -111,8 +129,12 @@ def add_to_cart(request, product_id):
     # Save changes to session
     request.session.modified = True
     
-    # Redirect to cart page
-    return redirect('store:cart_detail')
+    # Redirect back to referring page or category products page
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    else:
+        return redirect('store:category_products_page', category_slug=product.category.slug)
 
 def remove_from_cart(request, product_id):
     """Remove a product from the cart"""
@@ -207,7 +229,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
-    return redirect('store:login')
+    return redirect('store:product_list')
 
 @csrf_protect
 def category_products_page(request, category_slug):
@@ -223,3 +245,56 @@ def category_products_page(request, category_slug):
 @login_required
 def about_view(request):
     return render(request, 'about_us.html')
+
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import ContactForm
+
+@login_required
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            send_mail(
+                cd['subject'],
+                f"From: {cd['full_name']} <{cd['email']}>\n\n{cd['message']}",
+                settings.DEFAULT_FROM_EMAIL,
+                ['mdonthula98@gmail.com'],
+            )
+            messages.success(request, "Your message has been sent!")
+            return redirect('store:contact_us')
+    else:
+        form = ContactForm()
+    return render(request, 'contact_us.html', {'form': form})
+
+from django.shortcuts import redirect
+from .models import Product
+
+def shopify_checkout(request):
+    cart = request.session.get('cart', {})
+    
+    if not cart:
+        return redirect('store:cart')  # Empty cart fallback
+
+    line_items = []
+
+    for product_id, item in cart.items():
+        try:
+            product = Product.objects.get(id=product_id)
+            variant_id = product.shopify_variant_id
+            quantity = item.get('quantity', 1)
+
+            if variant_id:
+                line_items.append(f"{variant_id}:{quantity}")
+        except Product.DoesNotExist:
+            continue  # Just skip missing or deleted products
+
+    if not line_items:
+        return redirect('store:cart')  # No valid variant IDs
+
+    # Build Shopify cart URL
+    cart_string = ",".join(line_items)
+    shopify_url = f"https://ncrzwx-hm.myshopify.com/cart/{cart_string}"
+
+    return redirect(shopify_url)

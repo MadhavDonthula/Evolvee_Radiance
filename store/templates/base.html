@@ -112,12 +112,7 @@
     <nav class="bg-white shadow-sm p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <a href="{% url 'store:product_list' %}" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-400">Evolvée Radiance</a>
-            
-            <div class="hidden md:flex space-x-6">
-                {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="nav-link text-gray-700 hover:text-pink-500 font-medium">{{ c.name }}</a>
-                {% endfor %}
-            </div>
+
 
             <div class="flex space-x-5 items-center">
                 {% if user.is_authenticated %}
@@ -127,6 +122,7 @@
                         <button type="submit" class="text-gray-700 hover:text-pink-500 font-medium nav-link bg-transparent border-none cursor-pointer">Logout</button>
                     </form>
                     <a href="{% url 'store:about' %}" class="ml-4 text-gray-700 hover:text-pink-500 font-medium nav-link">About Us</a>
+                    <a href="{% url 'store:contact_us' %}" class="ml-4 text-gray-700 hover:text-pink-500 font-medium nav-link">Contact Us</a>
                 {% else %}
                     <button id="login-navbar-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow transition-all nav-link" style="margin-left: 0.5rem;">Login / Sign Up</button>
                 {% endif %}
@@ -194,13 +190,14 @@
                 });
             }
             // Open cart modal on cart icon click
-            document.querySelectorAll('a[href$="cart_detail"], a[href$="/cart/"]').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    cartModal.classList.remove('hidden');
-                    // Optionally, load cart content via AJAX here
-                });
-            });
+            // Remove this block if it exists
+            // document.querySelectorAll('a[href$="cart_detail"], a[href$="/cart/"]').forEach(el => {
+            //     el.addEventListener('click', function(e) {
+            //         e.preventDefault();
+            //         cartModal.classList.remove('hidden');
+            //         // Optionally, load cart content via AJAX here
+            //     });
+            // });
             // Close modals
             closeLoginModal.addEventListener('click', function() { loginModal.classList.add('hidden'); });
             closeCartModal.addEventListener('click', function() { cartModal.classList.add('hidden'); });

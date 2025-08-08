@@ -210,3 +210,12 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+# Email settings for contact form
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mdonthula98@gmail.com'
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='numk eoez sifm tnnz')  # Use an App Password, not your Gmail password!
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

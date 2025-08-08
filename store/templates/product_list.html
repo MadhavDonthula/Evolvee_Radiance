@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% if category %}{{ category.name }}{% else %}Evolvée Radiance Store{% endif %}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             background: #2d1537;
@@ -95,8 +85,6 @@
         .newsletter-btn { border-radius: 0 2rem 2rem 0; background: #a259c6; color: #fff; padding: 0.7rem 2rem; border: none; }
         .newsletter-btn:hover { background: #e16b8c; }
     </style>
-</head>
-<body>
     <!-- Hero Carousel Section -->
     <div class="carousel-container">
         <div class="carousel-slide active"><img src="{% static 'lip_products/sw1.JPG' %}" class="carousel-img" alt="Slide 1"></div>
@@ -113,7 +101,6 @@
             <span class="carousel-dot"></span>
         </div>
     </div>
-
     <!-- Search Bar -->
     <div class="flex justify-center mt-[-2rem] mb-8 z-20 relative fade-in-up">
         <form action="{% url 'store:search' %}" method="get" class="flex w-full max-w-md">
@@ -121,7 +108,6 @@
             <button type="submit" class="search-btn rounded-r-full">Search</button>
         </form>
     </div>
-
     <!-- Products by Category -->
     <section class="max-w-5xl mx-auto mb-12 fade-in-up">
         <div class="text-center mb-6">
@@ -142,47 +128,11 @@
             {% endfor %}
         </div>
     </section>
-
     <!-- Partners Section -->
     <section class="max-w-3xl mx-auto mb-12 fade-in-up">
         <div class="text-center mb-4 brand-font text-lg tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 1rem; padding: 0.5rem 2rem;">PARTNERS</div>
         <div class="partner-box text-center">List of partners</div>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer-bg py-10 px-4 mt-12 fade-in-up">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            <div>
-                <div class="brand-font brand-gradient text-2xl font-bold mb-2">Evolvée Radiance</div>
-                <ul class="mb-4">
-                    <li><a href="/" class="footer-link">Home</a></li>
-                    <li><a href="#" class="footer-link">Products</a></li>
-                    <li><a href="#" class="footer-link">about us</a></li>
-                    <li><a href="#" class="footer-link">Contact us</a></li>
-                </ul>
-                <div class="flex space-x-3 mt-2">
-                    <a href="#" class="text-xl"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-xl"><i class="fab fa-tiktok"></i></a>
-                </div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl font-semibold mb-2">Subscribe for our News</div>
-                <div class="mb-2 text-gray-300">Get more information about our product, services, discount and promotion</div>
-                <form class="flex justify-center mt-2">
-                    <input type="email" placeholder="example@gmail.com" class="newsletter-input" required />
-                    <button type="submit" class="newsletter-btn">Send</button>
-                </form>
-            </div>
-            <div class="flex flex-col items-center md:items-end">
-                <div class="mb-2 font-semibold">PAYMENT METHODS</div>
-                <div class="flex space-x-4">
-                    <img src="https://cdn.shopify.com/s/files/1/0533/2089/files/shopify-bag.png?height=32" alt="Shopify" class="h-8" />
-                    <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="h-8" />
-                </div>
-            </div>
-        </div>
-    </footer>
     <script>
         // Carousel logic
         const slides = document.querySelectorAll('.carousel-slide');
@@ -235,8 +185,6 @@
         window.addEventListener('scroll', revealOnScroll);
         window.addEventListener('load', revealOnScroll);
     </script>
-</body>
-</html>
 {% endblock %}
 
          

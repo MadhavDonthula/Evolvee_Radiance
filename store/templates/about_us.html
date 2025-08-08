@@ -2,32 +2,71 @@
 {% load static %}
 {% block title %}About Us{% endblock %}
 {% block content %}
-<div class="w-full min-h-screen bg-white">
-    <!-- Hero Section -->
-    <div class="relative w-full h-64 md:h-80 flex items-center justify-center bg-gray-100">
-        <img src="https://via.placeholder.com/600x300?text=Hero+Image" alt="About Us Hero" class="absolute inset-0 w-full h-full object-cover object-center opacity-80" />
-        <div class="relative z-10 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-purple-900 mb-4 brand-font">About Us</h1>
-            <p class="text-lg md:text-xl text-gray-800 font-medium max-w-2xl mx-auto bg-white bg-opacity-80 rounded-lg px-6 py-2 shadow">Each product we craft is a testament to our commitment to quality and innovation. Every item is meticulously designed to enhance your natural radiance and reflect your inner glow.</p>
+<style>
+    body, .about-bg {
+        background: #2d1537 !important;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .about-section {
+        background: #1a0823;
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(162,89,198,0.15);
+        padding: 3rem 2rem;
+        margin-bottom: 2rem;
+    }
+    .about-img {
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 24px rgba(226,107,140,0.15);
+        background: #fff;
+        object-fit: cover;
+        width: 220px;
+        height: 220px;
+    }
+    .about-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #a259c6, #e16b8c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+    .about-subtitle {
+        color: #e16b8c;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .about-text {
+        color: #e0c9f7;
+        font-size: 1.15rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+<div class="about-bg w-full min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12 pt-12">
+            <h1 class="about-title">About Us</h1>
+            <p class="text-lg text-purple-100 max-w-2xl mx-auto">Each product we craft is a testament to our commitment to quality and innovation. Every item is meticulously designed to enhance your natural radiance and reflect your inner glow.</p>
         </div>
-    </div>
-    <!-- Brand Story & Mission Section -->
-    <div class="w-full bg-[#4b2354] py-12 px-4 md:px-0">
-        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div class="flex flex-col items-center md:items-start">
-                <img src="https://via.placeholder.com/200x200?text=Line+Art" alt="Brand Story Art" class="w-48 h-48 rounded-xl mb-6 bg-white object-contain" />
-                <h2 class="text-2xl font-bold text-white mb-2">Our Brand Story</h2>
-                <p class="text-lg text-purple-100 mb-6">Our story began with a vision to empower everyone with confidence and beauty. Inspired by diversity and inclusion, we created a brand that goes beyond makeup—one that celebrates individuality, warmth, and modern femininity. Evolve Radiance is more than a collection of products; it's a symbol of freedom, happiness, and evolution.</p>
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-12">
+            <div class="about-section flex flex-col items-center md:items-start">
+                <img src="{% static 'lip_products/brand_story_art.png' %}" alt="Brand Story Art" class="about-img mb-6" />
+                <h2 class="about-subtitle">Our Brand Story</h2>
+                <p class="about-text">Our story began with a vision to empower everyone with confidence and beauty. Inspired by diversity and inclusion, we created a brand that goes beyond makeup—one that celebrates individuality, warmth, and modern femininity. Evolvée Radiance is more than a collection of products; it's a symbol of freedom, happiness, and evolution.</p>
             </div>
-            <div class="flex flex-col items-center md:items-start">
-                <img src="https://via.placeholder.com/200x200?text=Mission+Photo" alt="Mission Photo" class="w-48 h-48 rounded-xl mb-6 object-cover" />
-                <h2 class="text-2xl font-bold text-white mb-2">Our Mission</h2>
-                <p class="text-lg text-purple-100 mb-6">At Evolve Radiance, our mission is to empower individuals to express their unique beauty through innovation, inclusivity, and inspiration. We are committed to creating products that combine luxury, performance, and sustainability, while embracing every shade with glamour and grace.</p>
+            <div class="about-section flex flex-col items-center md:items-start">
+                <img src="{% static 'lip_products/Mission_Photo.png' %}" alt="Mission Photo" class="about-img mb-6" />
+                <h2 class="about-subtitle">Our Mission</h2>
+                <p class="about-text">At Evolvée Radiance, our mission is to empower individuals to express their unique beauty through innovation, inclusivity, and inspiration. We are committed to creating products that combine luxury, performance, and sustainability, while embracing every shade with glamour and grace.</p>
             </div>
         </div>
-        <div class="max-w-3xl mx-auto mt-12 text-center">
-            <h2 class="text-2xl font-bold text-white mb-2">Our Core Values</h2>
-            <p class="text-lg text-purple-100">At Evolve Radiance, we believe that beauty is not just about appearances, it's a journey of self-discovery and expression.</p>
+        <div class="about-section text-center max-w-3xl mx-auto mb-0">
+            <h2 class="about-subtitle">Our Core Values</h2>
+            <p class="about-text">At Evolvée Radiance, we believe that beauty is not just about appearances, it's a journey of self-discovery and expression.</p>
         </div>
     </div>
 </div>
