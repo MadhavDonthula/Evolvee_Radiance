@@ -26,25 +26,25 @@
 </style>
 
 <div class="checkout-bg w-full">
-    <div class="max-w-6xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-pink-500 mb-8">Checkout</h1>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <h1 class="text-2xl sm:text-3xl font-bold text-pink-500 mb-6 sm:mb-8">Checkout</h1>
         
-        <div class="checkout-card p-6 mb-8">
-            <h2 class="text-xl font-bold text-white mb-4">Complete Your Purchase</h2>
-            <p class="text-gray-400 mb-6">You can now complete your purchase securely through Shopify.</p>
+        <div class="checkout-card p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">Complete Your Purchase</h2>
+            <p class="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">You can now complete your purchase securely through Shopify.</p>
             
             <!-- Shopify Buy Button for Bombshell Product -->
             <div class="shopify-container">
-                <h3 class="text-lg font-semibold text-white mb-4">Bombshell Product</h3>
+                <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Bombshell Product</h3>
                 <div id='product-component-1754355073070'></div>
             </div>
         </div>
         
-        <div class="flex gap-4">
-            <a href="{% url 'store:cart_detail' %}" class="text-pink-400 hover:text-pink-500 px-6 py-3 rounded-xl border border-pink-400 text-center transition">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <a href="{% url 'store:cart_detail' %}" class="text-pink-400 hover:text-pink-500 px-4 sm:px-6 py-3 rounded-xl border border-pink-400 text-center transition text-sm sm:text-base">
                 Back to Cart
             </a>
-            <a href="{% url 'store:product_list' %}" class="text-pink-400 hover:text-pink-500 px-6 py-3 rounded-xl border border-pink-400 text-center transition">
+            <a href="{% url 'store:product_list' %}" class="text-pink-400 hover:text-pink-500 px-4 sm:px-6 py-3 rounded-xl border border-pink-400 text-center transition text-sm sm:text-base">
                 Continue Shopping
             </a>
         </div>
