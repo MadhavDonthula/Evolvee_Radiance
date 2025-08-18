@@ -1,12 +1,13 @@
 # store/models.py
 from django.db import models
 from django.urls import reverse
+from django.conf import settings
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True, storage=settings.MEDIA_STORAGE if hasattr(settings, 'MEDIA_STORAGE') else None)
     
     class Meta:
         verbose_name_plural = 'Categories'
@@ -31,7 +32,7 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, related_name='products', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/', storage=settings.MEDIA_STORAGE if hasattr(settings, 'MEDIA_STORAGE') else None)
     description = models.TextField()
     tagline = models.CharField(max_length=200, blank=True, help_text="Short description for product card (e.g. 'Signature crystal accent')")
     kit = models.CharField(max_length=200, blank=True, help_text="Product kit name (e.g. 'Crystal Couture Lip Kit')")
