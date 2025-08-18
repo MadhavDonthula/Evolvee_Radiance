@@ -22,33 +22,58 @@
         }
         .category-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: bold;
             background: linear-gradient(90deg, #a259c6, #e16b8c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 1rem;
+            text-align: center;
         }
         @media (min-width: 640px) {
             .category-title {
-                font-size: 2.2rem;
+                font-size: 2rem;
+                margin-bottom: 1.25rem;
             }
         }
         @media (min-width: 768px) {
+            .category-title {
+                font-size: 2.25rem;
+            }
+        }
+        @media (min-width: 1024px) {
             .category-title {
                 font-size: 2.5rem;
             }
         }
         .product-card {
             background: #1a0823;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
             box-shadow: 0 4px 24px rgba(0,0,0,0.15);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .product-card {
+                border-radius: 1rem;
+                padding: 1rem;
+            }
+        }
+        @media (min-width: 768px) {
+            .product-card {
+                border-radius: 1.25rem;
+                padding: 1.25rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .product-card {
+                border-radius: 1.5rem;
+                padding: 1.5rem;
+            }
         }
         .product-card:hover {
             transform: translateY(-6px) scale(1.03);
@@ -79,11 +104,30 @@
         }
         .product-image {
             width: 100%;
-            height: 200px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
             transition: transform 0.3s ease;
+        }
+        @media (min-width: 640px) {
+            .product-image {
+                height: 160px;
+                border-radius: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+        }
+        @media (min-width: 768px) {
+            .product-image {
+                height: 180px;
+                border-radius: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .product-image {
+                height: 200px;
+            }
         }
         .product-card:hover .product-image {
             transform: scale(1.05);
@@ -172,18 +216,18 @@
         }
     </style>
     <!-- Search Bar -->
-    <div class="flex justify-center mt-6 mb-8 z-20 relative px-4">
-        <form action="" method="get" class="flex w-full max-w-md">
-            <input type="text" name="q" placeholder="Search" class="flex-1 px-4 sm:px-6 py-3 rounded-l-full bg-white text-gray-800 focus:outline-none text-sm sm:text-base" />
-            <button type="submit" class="search-btn rounded-r-full text-sm sm:text-base px-3 sm:px-6">Search</button>
+    <div class="flex justify-center mt-4 sm:mt-6 mb-6 sm:mb-8 z-20 relative px-3 sm:px-4">
+        <form action="" method="get" class="flex w-full max-w-sm sm:max-w-md">
+            <input type="text" name="q" placeholder="Search" class="flex-1 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 rounded-l-full bg-white text-gray-800 focus:outline-none text-sm sm:text-base" />
+            <button type="submit" class="search-btn rounded-r-full text-sm sm:text-base px-2 sm:px-3 md:px-6 py-2.5 sm:py-3">Search</button>
         </form>
     </div>
     <!-- Category Title -->
-    <div class="text-center mb-8 px-4">
+    <div class="text-center mb-6 sm:mb-8 px-3 sm:px-4">
         <div class="category-title">{{ category.name }}</div>
     </div>
     <!-- Products Grid -->
-    <div class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 px-4">
+    <div class="max-w-3xl mx-auto grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-2 sm:px-3 md:px-4">
         {% for product in products %}
         <div class="product-card"
             data-id="{{ product.id }}"
@@ -199,33 +243,33 @@
                 <div class="out-of-stock">Out of stock</div>
             {% endif %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-            <div class="font-bold text-base sm:text-lg mb-1">{{ product.name }}</div>
-            <div class="text-gray-300 mb-1 text-sm sm:text-base">{{ product.tagline }}</div>
-            <div class="text-lg sm:text-xl font-bold mb-1">${{ product.price }}</div>
+            <div class="font-bold text-sm sm:text-base md:text-lg mb-1">{{ product.name }}</div>
+            <div class="text-gray-300 mb-1 text-xs sm:text-sm md:text-base">{{ product.tagline }}</div>
+            <div class="text-base sm:text-lg md:text-xl font-bold mb-1">${{ product.price }}</div>
             <div class="flex items-center justify-between w-full">
-                <span class="text-gray-400 text-sm sm:text-base">Stock: {{ product.stock }}</span>
+                <span class="text-gray-400 text-xs sm:text-sm md:text-base">Stock: {{ product.stock }}</span>
                 <button class="like-btn text-gray-400" data-id="{{ product.id }}" aria-label="Save item"><i class="fa-regular fa-heart"></i></button>
             </div>
-            <button class="add-to-cart-btn mt-2 text-sm sm:text-base">Add to cart</button>
+            <button class="add-to-cart-btn mt-2 text-xs sm:text-sm md:text-base">Add to cart</button>
         </div>
         {% empty %}
-        <div class="col-span-2 text-center text-lg text-gray-300">No products found in this category.</div>
+        <div class="col-span-2 text-center text-base sm:text-lg text-gray-300">No products found in this category.</div>
         {% endfor %}
     </div>
     <!-- Products by Category (bottom) -->
-    <section class="max-w-5xl mx-auto mt-12 mb-12 px-4">
-        <div class="text-center mb-6">
-            <span class="brand-font text-lg sm:text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 1rem; padding: 0.5rem 1rem sm:px-2rem;">PRODUCTS BY CATEGORY</span>
+    <section class="max-w-5xl mx-auto mt-8 sm:mt-12 mb-8 sm:mb-12 px-3 sm:px-4">
+        <div class="text-center mb-4 sm:mb-6">
+            <span class="brand-font text-base sm:text-lg md:text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 0.75rem sm:1rem; padding: 0.5rem 0.75rem sm:0.5rem 1rem md:0.5rem 2rem;">PRODUCTS BY CATEGORY</span>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+        <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
             {% for cat in categories %}
-            <a href="/category/{{ cat.slug }}/products/" class="category-card flex flex-col items-center p-4 sm:p-6 text-center">
+            <a href="/category/{{ cat.slug }}/products/" class="category-card flex flex-col items-center p-3 sm:p-4 md:p-6 text-center">
                 {% if cat.image %}
-                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl mb-4 border-4 border-purple-200">
+                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-cover rounded-lg sm:rounded-xl mb-3 sm:mb-4 border-2 sm:border-4 border-purple-200">
                 {% else %}
-                    <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ cat.name }}" class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl mb-4 border-4 border-purple-200">
+                    <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ cat.name }}" class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-cover rounded-lg sm:rounded-xl mb-3 sm:mb-4 border-2 sm:border-4 border-purple-200">
                 {% endif %}
-                <span class="brand-font text-lg sm:text-xl md:text-2xl mb-2" style="color: #e16b8c;">{{ cat.name|title }}</span>
+                <span class="brand-font text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-1 sm:mb-2" style="color: #e16b8c;">{{ cat.name|title }}</span>
             </a>
             {% empty %}
             <div class="col-span-2 text-center text-lg text-gray-300">No categories available.</div>
