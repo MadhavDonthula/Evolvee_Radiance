@@ -17,8 +17,20 @@ class MediaFilesStorage(FileSystemStorage):
         Return the URL where the contents of the file referenced by name can be
         accessed.
         """
-        if settings.DEBUG:
-            return super().url(name)
-        else:
-            # In production, serve through static files
-            return f"/static/media/{name}" 
+        # Always use the standard media URL pattern
+        return super().url(name)
+            
+    def exists(self, name):
+        """
+        Check if file exists in both media and static directories
+        """
+        # First check in media directory
+        if super().exists(name):
+            return True
+        
+        # Then check in static directory for production
+        if not settings.DEBUG:
+            static_path = os.path.join(settings.STATIC_ROOT, 'media', name)
+            return os.path.exists(static_path)
+        
+        return False 
