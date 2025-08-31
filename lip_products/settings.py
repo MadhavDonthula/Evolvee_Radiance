@@ -128,6 +128,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary_storage",
     "store",
 ]
 
@@ -193,20 +194,24 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Use WhiteNoise for static files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files - Configure to work with WhiteNoise in production
-MEDIA_URL = "/media/"
+# Cloudinary Configuration
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME', default='your-cloud-name'),
+    'API_KEY': env('CLOUDINARY_API_KEY', default='your-api-key'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET', default='your-api-secret'),
+}
+
+# Media files configuration
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Configure media files for both development and production
+# Use Cloudinary for media files in production
 if not DEBUG:
-    # In production, also serve media files through static URLs as backup
-    STATICFILES_DIRS.append(MEDIA_ROOT)
-    # Use custom storage for media files in production
-    from store.storage import MediaFilesStorage
-    MEDIA_STORAGE = MediaFilesStorage()
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    MEDIA_URL = CLOUDINARY_STORAGE.get('CLOUDINARY_URL', '/media/')
 else:
-    # In development, use default storage
-    MEDIA_STORAGE = None
+    # In development, use local storage
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
