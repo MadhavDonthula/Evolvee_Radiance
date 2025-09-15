@@ -1,11 +1,12 @@
 # store/admin.py
 from django.contrib import admin
-from .models import Category, Product
+from .models import Category, Product, Partner, PartnerSale, PartnerClick, PartnerPayment  # UPDATED LINE
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'price', 'stock', 'available', 'shopify_variant_id']
@@ -21,3 +22,8 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('description', 'tagline')
         }),
     )
+
+admin.site.register(Partner)
+admin.site.register(PartnerSale)
+admin.site.register(PartnerClick)
+admin.site.register(PartnerPayment)

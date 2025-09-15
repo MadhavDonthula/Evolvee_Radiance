@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Become a Partner{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Become a Partner</h4>
+                </div>
+                <div class="card-body">
+                    <p>Join our partner program and earn 10% commission on every sale!</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Business/Partner Name</label>
+                            <input type="text" name="partner_name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone (Optional)</label>
+                            <input type="text" name="phone" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

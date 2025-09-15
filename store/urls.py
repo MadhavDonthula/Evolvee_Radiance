@@ -1,6 +1,7 @@
 # store/urls.py
 from django.urls import path
 from . import views
+from . import partner_views  # ADD THIS LINE
 
 # handles URLs specific to the store
 app_name = 'store'
@@ -26,4 +27,10 @@ urlpatterns = [
     path('category/<slug:category_slug>/products/', views.category_products_page, name='category_products_page'),
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_us, name='contact_us'),
+    
+    # Partner URLs - ADD THESE LINES
+    path('partner/<str:partner_code>/', partner_views.partner_landing, name='partner_landing'),
+    path('partner-register/', partner_views.partner_register, name='partner_register'),
+    path('partner-dashboard/', partner_views.partner_dashboard, name='partner_dashboard'),
+    path('admin/partners/', partner_views.admin_partner_list, name='admin_partner_list'),
 ]

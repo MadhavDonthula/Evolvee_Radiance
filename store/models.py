@@ -1,6 +1,9 @@
 # store/models.py
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+import uuid
+from decimal import Decimal
 
 
 class Category(models.Model):
@@ -56,8 +59,6 @@ class Product(models.Model):
     
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.slug])
-    
-from django.contrib.auth.models import User
 
 class SavedItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_items')
@@ -78,3 +79,160 @@ class Favorite(models.Model):
 
     class Meta:
         unique_together = ('user', 'product')
+
+
+# ============== PARTNER SYSTEM MODELS ==============
+
+class Partner(models.Model):
+    """Model for managing partners/affiliates"""
+    PARTNER_STATUS = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('pending', 'Pending Approval'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='partner_profile')
+    partner_name = models.CharField(max_length=200, help_text="Business or Partner Name")
+    partner_code = models.CharField(max_length=50, unique=True, editable=False)
+    commission_percentage = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=10.00,
+        help_text="Commission percentage (e.g., 10.00 for 10%)"
+    )
+    status = models.CharField(max_length=20, choices=PARTNER_STATUS, default='pending')
+    
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    
+    payment_method = models.CharField(
+        max_length=50,
+        choices=[
+            ('bank_transfer', 'Bank Transfer'),
+            ('paypal', 'PayPal'),
+            ('venmo', 'Venmo'),
+            ('check', 'Check'),
+        ],
+        default='bank_transfer'
+    )
+    payment_details = models.TextField(blank=True)
+    
+    total_sales = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_commission_earned = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_commission_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    qr_code_image = models.ImageField(upload_to='partner_qr_codes/', blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.partner_name} ({self.partner_code})"
+    
+    def save(self, *args, **kwargs):
+        if not self.partner_code:
+            self.partner_code = self.generate_partner_code()
+        super().save(*args, **kwargs)
+    
+    def generate_partner_code(self):
+        """Generate a unique partner code"""
+        base_code = self.partner_name[:3].upper() if self.partner_name else "PTR"
+        unique_id = str(uuid.uuid4())[:6].upper()
+        return f"{base_code}-{unique_id}"
+    
+    def get_referral_url(self):
+        """Get the partner's referral URL"""
+        from django.urls import reverse
+        return f"/partner/{self.partner_code}/"
+    
+    def calculate_pending_commission(self):
+        """Calculate pending commission to be paid"""
+        return self.total_commission_earned - self.total_commission_paid
+
+
+class PartnerSale(models.Model):
+    """Track individual sales made through partner referrals"""
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='sales')
+    order_id = models.CharField(max_length=100, unique=True)
+    customer_email = models.EmailField(blank=True)
+    
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    commission_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('refunded', 'Refunded'),
+        ('cancelled', 'Cancelled'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    session_key = models.CharField(max_length=100, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    
+    products_data = models.JSONField(default=dict, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Sale {self.order_id} - {self.partner.partner_name}"
+
+
+class PartnerClick(models.Model):
+    """Track clicks/visits from partner QR codes and links"""
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='clicks')
+    session_key = models.CharField(max_length=100)
+    ip_address = models.GenericIPAddressField()
+    
+    converted = models.BooleanField(default=False)
+    sale = models.ForeignKey(PartnerSale, null=True, blank=True, on_delete=models.SET_NULL)
+    
+    clicked_at = models.DateTimeField(auto_now_add=True)
+    converted_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-clicked_at']
+    
+    def __str__(self):
+        return f"Click from {self.partner.partner_name} at {self.clicked_at}"
+
+
+class PartnerPayment(models.Model):
+    """Track payments made to partners"""
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='payments')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    payment_method = models.CharField(max_length=50)
+    transaction_id = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+    
+    period_start = models.DateField()
+    period_end = models.DateField()
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    
+    processed_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Payment of ${self.amount} to {self.partner.partner_name}"
