@@ -44,8 +44,8 @@
         /* Mobile-specific improvements */
         @media (max-width: 640px) {
             .container {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
             
             /* Improve touch targets */
@@ -66,16 +66,115 @@
             .space-y-3 > * + * {
                 margin-top: 0.75rem;
             }
+            
+            /* Mobile navbar height */
+            nav .h-14 {
+                height: 3rem;
+            }
         }
         
-        /* Smooth scrolling for mobile */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            /* Tablet adjustments */
+            .container {
+                max-width: 720px;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+            
+            nav .h-14 {
+                height: 3.5rem;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            /* Desktop adjustments */
+            .container {
+                max-width: 1200px;
+                padding-left: 2.5rem;
+                padding-right: 2.5rem;
+            }
+            
+            nav .h-14 {
+                height: 4rem;
+            }
+            
+            /* Better card spacing on desktop */
+            .card {
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1280px) {
+            /* Large desktop adjustments */
+            .container {
+                max-width: 1280px;
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+        }
+        
+        @media (min-width: 1536px) {
+            /* Extra large desktop adjustments */
+            .container {
+                max-width: 1400px;
+                padding-left: 4rem;
+                padding-right: 4rem;
+            }
+        }
+        
+        /* Smooth scrolling for all devices */
         html {
             scroll-behavior: smooth;
         }
         
-        /* Prevent horizontal scroll on mobile */
+        /* Prevent horizontal scroll */
         body {
             overflow-x: hidden;
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        button, a, .card, input, select, textarea {
+            transition: all 0.3s ease;
+        }
+        
+        /* Better modal animations */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Consistent spacing for main content */
+        main {
+            min-height: calc(100vh - 4rem);
+            padding-top: 5rem;
+            padding-bottom: 2rem;
+        }
+        
+        @media (max-width: 640px) {
+            main {
+                padding-top: 4rem;
+            }
+        }
+        
+        /* Improve form input consistency */
+        input, select, textarea {
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+            input, select, textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
         }
     </style>
 </head>
@@ -146,64 +245,79 @@
             </div>
         </div>
     </div>
-    <nav class="bg-transparent backdrop-blur-md bg-white/10 border-b border-white/20 p-3 sm:p-4 fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Mobile hamburger menu -->
-            <button class="md:hidden text-white hover:text-pink-300 p-2 transition-colors" id="mobile-menu-button">
-                <i class="fa-solid fa-bars text-xl"></i>
-            </button>
+    <nav class="bg-transparent backdrop-blur-md bg-white/10 border-b border-white/20 fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <!-- Left Section: Hamburger + Logo -->
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <!-- Mobile hamburger menu -->
+                    <button class="md:hidden text-white hover:text-pink-300 p-2 transition-colors" id="mobile-menu-button">
+                        <i class="fa-solid fa-bars text-lg sm:text-xl"></i>
+                    </button>
 
-            <!-- Logo - centered on mobile -->
-            <a href="{% url 'store:product_list' %}" class="text-lg sm:text-xl md:text-2xl font-bold text-white flex items-center">
-                <i class="fas fa-gem mr-2 text-pink-300"></i>
-                <span class="hidden sm:inline">Evolvée Radiance</span>
-                <span class="sm:hidden">ER</span>
-            </a>
+                    <!-- Logo - always show full text -->
+                    <a href="{% url 'store:product_list' %}" class="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white flex items-center">
+                        <i class="fas fa-gem mr-1.5 sm:mr-2 text-pink-300 text-xs sm:text-sm md:text-base"></i>
+                        <span>Evolvée Radiance</span>
+                    </a>
+                </div>
 
-            <div class="flex items-center space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-5">
-                {% if user.is_authenticated %}
-                    <span class="text-white font-medium text-xs sm:text-sm md:text-base hidden sm:block">Hi, {{ user.username }}</span>
-                    <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="text-white hover:text-pink-300 font-medium nav-link bg-transparent border-none cursor-pointer text-xs sm:text-sm md:text-base hidden sm:block transition-colors">Logout</button>
-                    </form>
-                    <a href="{% url 'store:about' %}" class="text-white hover:text-pink-300 font-medium nav-link text-xs sm:text-sm md:text-base hidden md:block transition-colors">About Us</a>
-                    <a href="{% url 'store:contact_us' %}" class="text-white hover:text-pink-300 font-medium nav-link text-xs sm:text-sm md:text-base hidden md:block transition-colors">Contact Us</a>
-                {% else %}
-                    <button id="login-navbar-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-2 sm:px-3 md:px-4 lg:px-5 py-1.5 sm:py-2 rounded-lg shadow-lg transition-all nav-link text-xs sm:text-sm md:text-base">Login</button>
-                {% endif %}
+                <!-- Center Section: Search Bar (Desktop/Tablet) -->
+                <form action="{% url 'store:search' %}" method="get" class="hidden md:flex items-center flex-1 max-w-lg mx-8 lg:mx-16">
+                    <input type="text" name="q" placeholder="Search products..." class="flex-1 px-4 lg:px-5 py-2 lg:py-2.5 rounded-l-full bg-white/95 text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm lg:text-base border border-gray-200 shadow-md" />
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white rounded-r-full text-sm lg:text-base px-4 lg:px-5 py-2 lg:py-2.5 transition-all font-semibold shadow-md">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
 
-                <a href="{% url 'store:saved_items' %}" class="text-white hover:text-pink-300 transition-colors p-1.5 sm:p-2">
-                    <i class="fa-solid fa-heart text-base sm:text-lg md:text-xl"></i>
-                </a>          
-                <a href="{% url 'store:search' %}" class="text-white hover:text-pink-300 transition-colors p-1.5 sm:p-2">
-                    <i class="fa-solid fa-magnifying-glass text-base sm:text-lg md:text-xl"></i>
-                </a>
-                <a href="{% url 'store:cart_detail' %}" class="text-white hover:text-pink-300 transition-colors relative p-1.5 sm:p-2">
-                    <i class="fa-solid fa-cart-shopping text-base sm:text-lg md:text-xl"></i>
-                    {% with total_items=request.session.cart.items|length %}
-                        {% if total_items > 0 %}
-                            <span class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-pink-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
-                                {{ total_items }}
-                            </span>
-                        {% endif %}
-                    {% endwith %}
-                </a>
+                <!-- Right Section: User Controls -->
+                <div class="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
+                    <!-- Search Icon (Mobile only) -->
+                    <a href="{% url 'store:search' %}" class="md:hidden text-white hover:text-pink-300 transition-colors p-1.5 sm:p-2">
+                        <i class="fa-solid fa-magnifying-glass text-sm sm:text-base"></i>
+                    </a>
+
+                    {% if user.is_authenticated %}
+                        <span class="text-white font-medium text-xs sm:text-sm md:text-base hidden lg:block">Hi, {{ user.username }}</span>
+                        <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white hover:text-pink-300 font-medium nav-link bg-transparent border-none cursor-pointer text-xs sm:text-sm md:text-base hidden lg:block transition-colors">Logout</button>
+                        </form>
+                        <a href="{% url 'store:about' %}" class="text-white hover:text-pink-300 font-medium nav-link text-xs sm:text-sm md:text-base hidden lg:block transition-colors">About Us</a>
+                        <a href="{% url 'store:contact_us' %}" class="text-white hover:text-pink-300 font-medium nav-link text-xs sm:text-sm md:text-base hidden lg:block transition-colors">Contact Us</a>
+                        <a href="{% url 'store:saved_items' %}" class="text-white hover:text-pink-300 transition-colors p-1.5 sm:p-2">
+                            <i class="fa-solid fa-heart text-sm sm:text-base md:text-lg"></i>
+                        </a>
+                    {% else %}
+                        <button id="login-navbar-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-lg shadow-lg transition-all nav-link text-xs sm:text-sm md:text-base">Login</button>
+                    {% endif %}
+
+                    <a href="{% url 'store:cart_detail' %}" class="text-white hover:text-pink-300 transition-colors relative p-1.5 sm:p-2">
+                        <i class="fa-solid fa-cart-shopping text-sm sm:text-base md:text-lg"></i>
+                        {% with total_items=request.session.cart.items|length %}
+                            {% if total_items > 0 %}
+                                <span class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-pink-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
+                                    {{ total_items }}
+                                </span>
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- Mobile menu - hidden by default -->
-        <div id="mobile-menu" class="hidden md:hidden w-full mt-3 container mx-auto">
-            <div class="bg-white/95 backdrop-blur-md shadow-lg rounded-xl p-4 flex flex-col space-y-3 border border-white/20">
+        <div id="mobile-menu" class="hidden md:hidden w-full mt-2 px-4">
+            <div class="bg-white shadow-xl rounded-xl p-4 sm:p-5 flex flex-col space-y-2 sm:space-y-3 border border-gray-100">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'store:about' %}" class="text-gray-700 hover:text-pink-500 py-3 px-4 rounded-lg hover:bg-pink-50 text-sm font-medium transition-colors">About Us</a>
-                    <a href="{% url 'store:contact_us' %}" class="text-gray-700 hover:text-pink-500 py-3 px-4 rounded-lg hover:bg-pink-50 text-sm font-medium transition-colors">Contact Us</a>
-                    <hr class="my-2 border-gray-200">
+                    <a href="{% url 'store:about' %}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200">About Us</a>
+                    <a href="{% url 'store:contact_us' %}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200">Contact Us</a>
+                    <hr class="my-2 sm:my-3 border-gray-200">
                 {% endif %}
-                <div class="text-xs text-gray-500 font-semibold uppercase tracking-wider px-4 py-1">Categories</div>
+                <div class="text-xs sm:text-sm text-purple-600 font-bold uppercase tracking-wider px-4 sm:px-5 py-2 bg-purple-50 rounded-lg">Categories</div>
                 {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="text-gray-700 hover:text-pink-500 py-3 px-4 rounded-lg hover:bg-pink-50 text-sm font-medium transition-colors flex items-center">
-                        <i class="fas fa-tag mr-3 text-pink-400"></i>
+                    <a href="{{ c.get_absolute_url }}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 flex items-center">
+                        <i class="fas fa-tag mr-3 sm:mr-4 text-purple-500 text-sm sm:text-base"></i>
                         {{ c.name }}
                     </a>
                 {% endfor %}
@@ -211,7 +325,7 @@
         </div>
     </nav>
 
-    <main class="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-4">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-16 pb-6 sm:pb-8 lg:pb-12">
         {% block content %}
         {% endblock %}
     </main>

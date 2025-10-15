@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        body {
+            background: #2d1537;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .brand-font { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .search-header {
+            background: linear-gradient(135deg, #2d1537 0%, #1a0823 100%);
+            padding: 2rem 1rem;
+            margin: -1rem -1rem 2rem -1rem;
+            border-radius: 0 0 2rem 2rem;
+        }
+        @media (min-width: 640px) {
+            .search-header {
+                padding: 2.5rem 1.5rem;
+                margin: -1.5rem -1.5rem 2.5rem -1.5rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .search-header {
+                padding: 3rem 2rem;
+                margin: -2rem -2rem 3rem -2rem;
+            }
+        }
+    </style>
+
+    <!-- Search Header -->
+    <div class="search-header">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="brand-font text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style="background: linear-gradient(90deg, #a259c6, #e16b8c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Search Results
+            </h1>
+            {% if query %}
+                <p class="text-base sm:text-lg text-purple-200">Showing results for "<span class="font-semibold text-pink-300">{{ query }}</span>"</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex justify-center mb-8 sm:mb-12 px-4 sm:px-6 lg:px-8">
+        <form action="{% url 'store:search' %}" method="get" class="flex w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search products..." class="flex-1 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 rounded-l-full bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm sm:text-base border border-gray-200 shadow-lg" />
+            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white rounded-r-full text-sm sm:text-base px-5 sm:px-6 lg:px-8 py-2.5 sm:py-3 shadow-lg transition-all font-semibold hover:shadow-xl">Search</button>
+        </form>
+    </div>
+
+    <!-- Search Results -->
+    <section class="max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-6 lg:px-8">
+        {% if products %}
+            <div class="text-center mb-6 sm:mb-8">
+                <p class="text-lg sm:text-xl text-purple-200">Found <span class="font-bold text-pink-300">{{ products|length }}</span> product{{ products|length|pluralize }}</p>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {% for product in products %}
+                <a href="{% url 'store:product_detail' product.slug %}" class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:transform hover:-translate-y-2">
+                    <div class="relative">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 sm:h-48 lg:h-56 object-cover">
+                        {% else %}
+                            <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ product.name }}" class="w-full h-40 sm:h-48 lg:h-56 object-cover">
+                        {% endif %}
+                        {% if product.stock <= 0 %}
+                            <div class="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                Out of Stock
+                            </div>
+                        {% elif product.stock <= 5 %}
+                            <div class="absolute top-2 right-2 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                Low Stock
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="p-4 sm:p-5">
+                        <h3 class="brand-font text-base sm:text-lg font-bold text-purple-800 mb-2">{{ product.name }}</h3>
+                        {% if product.tagline %}
+                            <p class="text-xs sm:text-sm text-gray-600 mb-2">{{ product.tagline }}</p>
+                        {% endif %}
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg sm:text-xl font-bold text-pink-600">${{ product.price }}</span>
+                            {% if product.stock > 0 %}
+                                <span class="text-xs sm:text-sm text-green-600 font-semibold">In Stock</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No Results -->
+            <div class="text-center py-12 sm:py-16">
+                <div class="mb-6">
+                    <i class="fas fa-search text-6xl sm:text-7xl text-purple-300 opacity-50"></i>
+                </div>
+                <h2 class="brand-font text-2xl sm:text-3xl font-bold mb-4 text-purple-200">No Products Found</h2>
+                {% if query %}
+                    <p class="text-base sm:text-lg text-purple-300 mb-8">We couldn't find any products matching "<span class="font-semibold">{{ query }}</span>"</p>
+                {% else %}
+                    <p class="text-base sm:text-lg text-purple-300 mb-8">Please enter a search term to find products</p>
+                {% endif %}
+                <a href="{% url 'store:product_list' %}" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-lg transition-all hover:shadow-xl text-sm sm:text-base">
+                    Browse All Products
+                </a>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Suggestions -->
+    {% if not products and query %}
+    <section class="max-w-4xl mx-auto mb-10 sm:mb-16 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8">
+            <h3 class="brand-font text-xl sm:text-2xl font-bold mb-4 text-purple-200">Search Tips:</h3>
+            <ul class="space-y-2 text-sm sm:text-base text-purple-300">
+                <li><i class="fas fa-check-circle text-pink-400 mr-2"></i>Check your spelling</li>
+                <li><i class="fas fa-check-circle text-pink-400 mr-2"></i>Try different keywords</li>
+                <li><i class="fas fa-check-circle text-pink-400 mr-2"></i>Use more general terms</li>
+                <li><i class="fas fa-check-circle text-pink-400 mr-2"></i>Browse our categories instead</li>
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}
+

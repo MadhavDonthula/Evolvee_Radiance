@@ -26,7 +26,7 @@
         .carousel-container {
             position: relative;
             width: 100vw;
-            height: 60vh;
+            height: 55vh;
             overflow: hidden;
             margin: 0;
             padding: 0;
@@ -35,30 +35,34 @@
             right: 50%;
             margin-left: -50vw;
             margin-right: -50vw;
+            margin-top: -4rem;
         }
         
         @media (max-width: 640px) {
             .carousel-container {
-                height: 30vh;
+                height: 42vh;
                 width: 100%;
                 left: 0;
                 right: 0;
                 margin-left: 0;
                 margin-right: 0;
+                margin-top: -4rem;
             }
         }
         
         @media (min-width: 641px) and (max-width: 1024px) {
             .carousel-container {
-                height: 40vh;
+                height: 52vh;
                 width: 100vw;
+                margin-top: -4.5rem;
             }
         }
         
         @media (min-width: 1025px) {
             .carousel-container {
-                height: 50vh;
+                height: 65vh;
                 width: 100vw;
+                margin-top: -5rem;
             }
         }
         .carousel-slide {
@@ -82,7 +86,14 @@
         
         @media (max-width: 640px) {
             .carousel-img {
-                object-position: center top;
+                object-position: center center;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .carousel-img {
+                object-fit: contain;
+                object-position: center;
             }
         }
         .carousel-overlay {
@@ -90,32 +101,45 @@
             background: linear-gradient(135deg, rgba(45,21,55,0.8) 0%, rgba(26,8,35,0.4) 50%, rgba(45,21,55,0.6) 100%);
             z-index: 3;
         }
+        
+        @media (min-width: 1025px) {
+            .carousel-overlay {
+                background: linear-gradient(135deg, rgba(45,21,55,0.6) 0%, rgba(26,8,35,0.3) 50%, rgba(45,21,55,0.5) 100%);
+            }
+        }
         .carousel-dots {
             position: absolute; 
-            bottom: 20px; 
+            bottom: 14px; 
             left: 50%; 
             transform: translateX(-50%);
             display: flex; 
-            gap: 8px; 
+            gap: 7px; 
             z-index: 10;
         }
         
         @media (min-width: 640px) {
             .carousel-dots {
-                bottom: 24px;
-                gap: 10px;
+                bottom: 22px;
+                gap: 9px;
             }
         }
         
         @media (min-width: 768px) {
             .carousel-dots {
-                bottom: 32px;
-                gap: 12px;
+                bottom: 28px;
+                gap: 11px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-dots {
+                bottom: 36px;
+                gap: 13px;
             }
         }
         .carousel-dot {
-            width: 10px; 
-            height: 10px; 
+            width: 9px; 
+            height: 9px; 
             border-radius: 50%; 
             background: #fff; 
             opacity: 0.4; 
@@ -125,29 +149,36 @@
         
         @media (min-width: 640px) {
             .carousel-dot {
-                width: 12px;
-                height: 12px;
+                width: 11px;
+                height: 11px;
             }
         }
         
         @media (min-width: 768px) {
             .carousel-dot {
-                width: 14px;
-                height: 14px;
+                width: 13px;
+                height: 13px;
             }
         }
-        .carousel-dot.active { opacity: 1; background: #e16b8c; }
+        
+        @media (min-width: 1024px) {
+            .carousel-dot {
+                width: 15px;
+                height: 15px;
+            }
+        }
+        .carousel-dot.active { opacity: 1; background: #e16b8c; transform: scale(1.2); }
         .carousel-arrow {
             position: absolute; 
             top: 50%; 
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.4); 
+            background: rgba(0,0,0,0.5); 
             color: #fff; 
             border: none; 
             border-radius: 50%; 
-            width: 32px; 
-            height: 32px;
-            font-size: 1.1rem; 
+            width: 38px; 
+            height: 38px;
+            font-size: 1.05rem; 
             z-index: 10; 
             cursor: pointer; 
             transition: all 0.3s ease;
@@ -157,61 +188,292 @@
         }
         
         .carousel-arrow:hover {
-            background: rgba(225, 107, 140, 0.8);
-            transform: translateY(-50%) scale(1.1);
+            background: rgba(225, 107, 140, 0.9);
+            transform: translateY(-50%) scale(1.15);
         }
         
         @media (min-width: 640px) {
             .carousel-arrow {
-                width: 40px; 
-                height: 40px;
-                font-size: 1.3rem;
+                width: 46px; 
+                height: 46px;
+                font-size: 1.25rem;
             }
         }
         
         @media (min-width: 768px) {
             .carousel-arrow {
-                width: 48px; 
-                height: 48px;
-                font-size: 1.5rem;
+                width: 52px; 
+                height: 52px;
+                font-size: 1.45rem;
             }
         }
         
         @media (min-width: 1024px) {
             .carousel-arrow {
-                width: 56px; 
-                height: 56px;
-                font-size: 1.8rem;
+                width: 60px; 
+                height: 60px;
+                font-size: 1.7rem;
             }
         }
-        .carousel-arrow:hover { background: #e16b8c; }
-        .carousel-arrow.left { left: 16px; }
-        .carousel-arrow.right { right: 16px; }
+        .carousel-arrow.left { left: 10px; }
+        .carousel-arrow.right { right: 10px; }
         
         @media (min-width: 640px) {
-            .carousel-arrow.left { left: 24px; }
-            .carousel-arrow.right { right: 24px; }
+            .carousel-arrow.left { left: 18px; }
+            .carousel-arrow.right { right: 18px; }
         }
         
         @media (min-width: 768px) {
-            .carousel-arrow.left { left: 32px; }
-            .carousel-arrow.right { right: 32px; }
+            .carousel-arrow.left { left: 28px; }
+            .carousel-arrow.right { right: 28px; }
         }
         
         @media (min-width: 1024px) {
-            .carousel-arrow.left { left: 48px; }
-            .carousel-arrow.right { right: 48px; }
+            .carousel-arrow.left { left: 44px; }
+            .carousel-arrow.right { right: 44px; }
         }
 
         .fade-in-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
         .fade-in-up.visible { opacity: 1; transform: translateY(0); }
-        .category-card {
-            background: #1a0823;
+        
+        /* Creative Category Cards - Mobile First Design */
+        .category-card-link {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
             border-radius: 1.5rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: visible;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .category-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 8px 32px 0 rgba(226,107,140,0.25), 0 1.5px 8px 0 rgba(162,89,198,0.15); z-index: 2; }
+        
+        @media (min-width: 1024px) {
+            .category-card-link {
+                background: linear-gradient(135deg, #ffffff 0%, #f8f5fb 100%);
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(162, 89, 198, 0.12);
+            }
+        }
+        
+        .category-card-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(162, 89, 198, 0.12) 0%, rgba(225, 107, 140, 0.12) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card-link::before {
+                display: block;
+            }
+        }
+        
+        .category-card-link:hover::before {
+            opacity: 1;
+        }
+        
+        .category-card-link:hover {
+            transform: translateY(-5px);
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card-link:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 16px 40px rgba(162, 89, 198, 0.28), 0 10px 25px rgba(225, 107, 140, 0.18);
+            }
+        }
+        
+        .category-card-inner {
+            position: relative;
+            z-index: 2;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card-inner {
+                padding: 1.625rem;
+            }
+        }
+        
+        .category-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 8px 24px rgba(162, 89, 198, 0.2);
+        }
+        
+        @media (min-width: 640px) {
+            .category-img-wrapper {
+                border-radius: 1.75rem;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-img-wrapper {
+                border-radius: 1rem;
+                margin-bottom: 1.375rem;
+                box-shadow: none;
+            }
+        }
+        
+        .category-img-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(162, 89, 198, 0.25) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .category-card-link:hover .category-img-wrapper::after {
+            opacity: 1;
+        }
+        
+        .category-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @media (min-width: 640px) {
+            .category-img {
+                height: 180px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .category-img {
+                height: 195px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-img {
+                height: 195px;
+            }
+        }
+        
+        @media (min-width: 1280px) {
+            .category-img {
+                height: 215px;
+            }
+        }
+        
+        @media (min-width: 1536px) {
+            .category-img {
+                height: 235px;
+            }
+        }
+        
+        .category-card-link:hover .category-img {
+            transform: scale(1.08);
+        }
+        
+        .category-name-wrapper {
+            position: relative;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .category-name-wrapper {
+                padding: 0;
+            }
+        }
+        
+        .category-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e16b8c 0%, #f8a5c2 50%, #e16b8c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.125rem;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+            display: block;
+            text-shadow: 0 2px 8px rgba(225, 107, 140, 0.3);
+        }
+        
+        @media (min-width: 640px) {
+            .category-name {
+                font-size: 1.25rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .category-name {
+                font-size: 1.375rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-name {
+                font-size: 1.3125rem;
+                line-height: 1.45;
+                background: linear-gradient(135deg, #6d2f8f 0%, #a259c6 50%, #e16b8c 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-shadow: none;
+            }
+        }
+        
+        .category-card-link:hover .category-name {
+            transform: scale(1.05);
+            letter-spacing: 0.025em;
+        }
+        
+        .category-icon {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #a259c6 0%, #e16b8c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.0625rem;
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 3;
+            box-shadow: 0 4px 12px rgba(162, 89, 198, 0.4);
+        }
+        
+        @media (min-width: 1024px) {
+            .category-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.125rem;
+                top: 0.875rem;
+                right: 0.875rem;
+            }
+        }
+        
+        .category-card-link:hover .category-icon {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        
         .footer-link { color: #fff; opacity: 0.8; transition: opacity 0.2s; }
         .footer-link:hover { opacity: 1; }
         .footer-bg { background: #12071a; }
@@ -221,6 +483,40 @@
         .newsletter-input { border-radius: 2rem 0 0 2rem; padding: 0.7rem 1.2rem; border: none; width: 70%; }
         .newsletter-btn { border-radius: 0 2rem 2rem 0; background: #a259c6; color: #fff; padding: 0.7rem 2rem; border: none; }
         .newsletter-btn:hover { background: #e16b8c; }
+        
+        /* Section badge enhancements */
+        .section-badge {
+            background: linear-gradient(135deg, #bca4cb 0%, #d4c4e0 100%);
+            box-shadow: 0 4px 16px rgba(188, 164, 203, 0.35);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .section-badge:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 22px rgba(188, 164, 203, 0.45);
+        }
+        
+        @media (max-width: 1023px) {
+            .section-badge:hover {
+                transform: scale(1.03);
+            }
+            
+            /* Mobile section header - left aligned with right rounded edge */
+            .section-header-container {
+                text-align: left;
+                margin-left: 0;
+                padding-left: 0;
+            }
+            
+            .section-badge {
+                border-radius: 0 2rem 2rem 0 !important;
+                padding-left: 1.5rem !important;
+                padding-right: 2rem !important;
+                margin-left: 0;
+                display: inline-block;
+            }
+        }
     </style>
     <!-- Hero Carousel Section -->
     <div class="carousel-container">
@@ -239,37 +535,48 @@
             <span class="carousel-dot"></span>
         </div>
     </div>
-    <!-- Search Bar -->
-    <div class="flex justify-center mt-4 sm:mt-6 mb-6 sm:mb-8 z-20 relative fade-in-up px-4 sm:px-6 lg:px-8">
-        <form action="{% url 'store:search' %}" method="get" class="flex w-full max-w-sm sm:max-w-md lg:max-w-lg">
-            <input type="text" name="q" placeholder="Search" class="flex-1 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 rounded-l-full bg-white/95 backdrop-blur-sm text-gray-800 focus:outline-none text-sm sm:text-base border border-white/20 shadow-lg" />
-            <button type="submit" class="search-btn rounded-r-full text-sm sm:text-base px-2 sm:px-3 md:px-6 py-2.5 sm:py-3 shadow-lg">Search</button>
+    <!-- Search Bar (Mobile/Tablet only) -->
+    <div class="flex lg:hidden justify-center mt-[-1.75rem] sm:mt-[-2.25rem] md:mt-[-2.75rem] mb-5 sm:mb-7 md:mb-9 z-20 relative fade-in-up px-3 sm:px-4 md:px-6">
+        <form action="{% url 'store:search' %}" method="get" class="flex w-full max-w-xs sm:max-w-sm md:max-w-md">
+            <input type="text" name="q" placeholder="Search products..." class="flex-1 px-3.5 sm:px-4.5 md:px-5.5 py-2.5 sm:py-3 md:py-3.5 rounded-l-full bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm sm:text-base border border-gray-200 shadow-lg" />
+            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white rounded-r-full text-sm sm:text-base px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 shadow-lg transition-all font-semibold hover:shadow-xl">Search</button>
         </form>
     </div>
     <!-- Products by Category -->
-    <section class="max-w-6xl mx-auto mb-8 sm:mb-12 fade-in-up px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-6 sm:mb-8">
-            <span class="brand-font text-base sm:text-lg md:text-xl lg:text-2xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 0.75rem sm:1rem; padding: 0.5rem 1rem sm:0.75rem 1.5rem md:1rem 2rem;">PRODUCTS BY CATEGORY</span>
+    <section class="max-w-7xl mx-auto mt-8 sm:mt-12 md:mt-16 lg:mt-20 mb-7 sm:mb-9 md:mb-14 fade-in-up px-0 sm:px-0 md:px-6 lg:px-8 xl:px-10">
+        <div class="section-header-container text-center lg:text-center mb-5 sm:mb-7 md:mb-9 lg:mb-12">
+            <span class="section-badge brand-font text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold tracking-wider uppercase" style="color: #2d1537; border-radius: 2rem; padding: 0.5rem 1.25rem sm:0.65rem 1.75rem md:0.8rem 2.25rem lg:1.1rem 2.75rem;">PRODUCTS BY CATEGORY</span>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8 px-3 sm:px-4 lg:px-0">
             {% for category in categories %}
-            <a href="/category/{{ category.slug }}/products/" class="category-card flex flex-col items-center p-3 sm:p-4 md:p-6 text-center">
-                {% if category.image %}
-                    <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-cover rounded-lg sm:rounded-xl mb-3 sm:mb-4 border-2 sm:border-4 border-purple-200">
-                {% else %}
-                    <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ category.name }}" class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-cover rounded-lg sm:rounded-xl mb-3 sm:mb-4 border-2 sm:border-4 border-purple-200">
-                {% endif %}
-                <span class="brand-font text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-1 sm:mb-2" style="color: #e16b8c;">{{ category.name|title }}</span>
+            <a href="/category/{{ category.slug }}/products/" class="category-card-link">
+                <div class="category-card-inner">
+                    <span class="category-icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                    <div class="category-img-wrapper">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-img">
+                        {% else %}
+                            <img src="{% static 'lip_products/aurora-crystal.jpg' %}" alt="{{ category.name }}" class="category-img">
+                        {% endif %}
+                    </div>
+                    <div class="category-name-wrapper">
+                        <span class="category-name">{{ category.name|title }}</span>
+                    </div>
+                </div>
             </a>
             {% empty %}
-            <div class="col-span-2 text-center text-base sm:text-lg text-gray-300">No categories available.</div>
+            <div class="col-span-2 lg:col-span-4 text-center text-sm sm:text-base md:text-lg text-gray-300 py-10">No categories available.</div>
             {% endfor %}
         </div>
     </section>
     <!-- Partners Section -->
-    <section class="max-w-4xl mx-auto mb-8 sm:mb-12 fade-in-up px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-4 sm:mb-6 brand-font text-sm sm:text-base md:text-lg lg:text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 0.75rem sm:1rem; padding: 0.5rem 1rem sm:0.75rem 1.5rem md:1rem 2rem;">PARTNERS</div>
-        <div class="partner-box text-center p-4 sm:p-6 md:p-8 lg:p-10 text-sm sm:text-base md:text-lg lg:text-xl">List of partners</div>
+    <section class="max-w-7xl mx-auto mb-7 sm:mb-9 md:mb-14 fade-in-up px-0 sm:px-0 md:px-6 lg:px-8 xl:px-10">
+        <div class="section-header-container text-center lg:text-center mb-4 sm:mb-5 md:mb-7">
+            <span class="section-badge brand-font text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-semibold tracking-wider uppercase" style="color: #2d1537; border-radius: 2rem; padding: 0.5rem 1.25rem sm:0.65rem 1.75rem md:0.8rem 2.25rem lg:1.1rem 2.75rem;">PARTNERS</span>
+        </div>
+        <div class="bg-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-7 md:p-9 text-center text-sm sm:text-base md:text-lg text-gray-700 shadow-md mx-3 sm:mx-4 lg:mx-0">List of partners</div>
     </section>
     <script>
         // Carousel logic
@@ -324,5 +631,3 @@
         window.addEventListener('load', revealOnScroll);
     </script>
 {% endblock %}
-
-         
