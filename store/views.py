@@ -1,6 +1,6 @@
 # store/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Product, SavedItem
+from .models import Category, Product, SavedItem, Partner  # Added Partner import
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -9,11 +9,16 @@ from django.db.models import Q
 from decimal import Decimal
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
+from django.utils import timezone  # ADD THIS IMPORT FOR EXPIRY CHECKING
 
 # Create a custom form that extends UserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import ContactForm
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -49,10 +54,6 @@ def product_detail(request, slug):
         'related_products': related_products,
         'is_saved': is_saved,
     })
-
-# store/views.py
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def toggle_save_item(request):
@@ -96,14 +97,13 @@ def saved_items(request):
     saved = SavedItem.objects.filter(user=request.user).select_related('product')
     return render(request, 'saved_items.html', {'saved_items': saved})
 
-
-
 # Simple cart functions using Django session
 def get_cart(request):
     """Get or initialize the cart in session"""
     if 'cart' not in request.session:
         request.session['cart'] = {}
     return request.session['cart']
+
 @csrf_protect
 def add_to_cart(request, product_id):
     """Add a product to the cart"""
@@ -148,10 +148,10 @@ def remove_from_cart(request, product_id):
     return redirect('store:cart_detail')
 
 def cart_detail(request):
-    """Show cart contents"""
+    """Show cart contents with partner discount if applicable"""
     cart = get_cart(request)
     cart_items = []
-    total_price = Decimal('0')
+    subtotal = Decimal('0')
     
     # Process each cart item and fetch product data
     for product_id, item_data in cart.items():
@@ -168,18 +168,85 @@ def cart_detail(request):
                 'total_price': total_item_price
             })
             
-            total_price += total_item_price
+            subtotal += total_item_price
             
         except Product.DoesNotExist:
-            # Remove the product if it no longer exists in the database
             del cart[product_id]
             request.session.modified = True
     
-    # Make sure we render to the correct template path
+    # Check for partner discount with EXPIRY CHECK
+    partner = None
+    discount_amount = Decimal('0')
+    partner_code = request.session.get('partner_code')
+    
+    if partner_code:
+        try:
+            partner = Partner.objects.get(partner_code=partner_code, status='active')
+            
+            # CHECK IF PARTNER CODE HAS EXPIRED
+            if partner.qr_expiry_date and timezone.now() > partner.qr_expiry_date:
+                # Code has expired - remove it from session
+                messages.error(request, f"The partner code '{partner_code}' has expired and has been removed.")
+                del request.session['partner_code']
+                if 'partner_id' in request.session:
+                    del request.session['partner_id']
+                request.session.modified = True
+                partner = None  # Don't apply discount
+            else:
+                # Code is valid and not expired - apply discount
+                discount_amount = subtotal * (partner.commission_percentage / Decimal('100'))
+                
+        except Partner.DoesNotExist:
+            # Invalid or inactive partner code
+            messages.error(request, "Invalid or inactive partner code has been removed.")
+            if 'partner_code' in request.session:
+                del request.session['partner_code']
+            if 'partner_id' in request.session:
+                del request.session['partner_id']
+            request.session.modified = True
+    
+    total_price = subtotal - discount_amount
+    
     return render(request, 'cart.html', {
         'cart_items': cart_items,
+        'subtotal': subtotal,
+        'partner': partner,
+        'discount_amount': discount_amount,
         'total_price': total_price
     })
+
+@csrf_protect
+def apply_partner_code(request):
+    """Apply a partner code manually with expiry check"""
+    if request.method == 'POST':
+        code = request.POST.get('partner_code', '').upper()
+        
+        if code:
+            try:
+                partner = Partner.objects.get(partner_code=code, status='active')
+                
+                # CHECK IF PARTNER CODE HAS EXPIRED
+                if partner.qr_expiry_date and timezone.now() > partner.qr_expiry_date:
+                    messages.error(request, f"This partner code has expired. Please contact {partner.partner_name} for a new code.")
+                else:
+                    # Code is valid and not expired
+                    request.session['partner_code'] = code
+                    request.session['partner_id'] = partner.id
+                    request.session.modified = True
+                    messages.success(request, f"Partner code applied! You'll get {partner.commission_percentage}% off")
+                    
+            except Partner.DoesNotExist:
+                messages.error(request, "Invalid or inactive partner code")
+        else:
+            # Remove partner code if empty
+            if 'partner_code' in request.session:
+                del request.session['partner_code']
+            if 'partner_id' in request.session:
+                del request.session['partner_id']
+            request.session.modified = True
+            messages.info(request, "Partner code removed")
+    
+    return redirect('store:cart_detail')
 
 @csrf_protect
 def register_view(request):
@@ -246,10 +313,6 @@ def category_products_page(request, category_slug):
 def about_view(request):
     return render(request, 'about_us.html')
 
-from django.core.mail import send_mail
-from django.conf import settings
-from .forms import ContactForm
-
 @login_required
 def contact_us(request):
     if request.method == 'POST':
@@ -267,9 +330,6 @@ def contact_us(request):
     else:
         form = ContactForm()
     return render(request, 'contact_us.html', {'form': form})
-
-from django.shortcuts import redirect
-from .models import Product
 
 def shopify_checkout(request):
     cart = request.session.get('cart', {})
@@ -296,5 +356,12 @@ def shopify_checkout(request):
     # Build Shopify cart URL
     cart_string = ",".join(line_items)
     shopify_url = f"https://ncrzwx-hm.myshopify.com/cart/{cart_string}"
-
+    
+    # Add partner code as a note if present (Shopify doesn't support discount codes via URL)
+    partner_code = request.session.get('partner_code')
+    if partner_code:
+        # Note: Shopify doesn't support discount codes via cart URL
+        # You'll need to handle this differently, perhaps with Shopify webhooks
+        pass
+    
     return redirect(shopify_url)

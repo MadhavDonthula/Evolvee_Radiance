@@ -127,6 +127,18 @@ class Partner(models.Model):
     
     qr_code_image = models.ImageField(upload_to='partner_qr_codes/', blank=True, null=True)
     
+    # QR Code Expiry Fields 
+    qr_validity_days = models.IntegerField(
+        default=30,
+        help_text="Number of days the QR code is valid (0 = never expires)"
+    )
+    qr_expiry_date = models.DateTimeField(
+        null=True, 
+        blank=True,
+        help_text="When the QR code expires. Auto-calculated from validity_days"
+    )
+    is_expired = models.BooleanField(default=False)
+    
     class Meta:
         ordering = ['-created_at']
     
@@ -136,6 +148,18 @@ class Partner(models.Model):
     def save(self, *args, **kwargs):
         if not self.partner_code:
             self.partner_code = self.generate_partner_code()
+        
+        # Set expiry date when partner is approved
+        if self.status == 'active' and self.qr_validity_days > 0 and not self.qr_expiry_date:
+            from django.utils import timezone
+            from datetime import timedelta
+            self.qr_expiry_date = timezone.now() + timedelta(days=self.qr_validity_days)
+        
+        # Check if expired
+        if self.qr_expiry_date:
+            from django.utils import timezone
+            self.is_expired = timezone.now() > self.qr_expiry_date
+            
         super().save(*args, **kwargs)
     
     def generate_partner_code(self):
@@ -152,6 +176,30 @@ class Partner(models.Model):
     def calculate_pending_commission(self):
         """Calculate pending commission to be paid"""
         return self.total_commission_earned - self.total_commission_paid
+    
+    def regenerate_code(self):
+        """Generate completely new partner code and QR"""
+        # Delete old QR image if it exists
+        if self.qr_code_image:
+            self.qr_code_image.delete()
+        
+        # Generate new partner code
+        self.partner_code = self.generate_partner_code()
+        
+        # Reset expiry based on validity days
+        if self.qr_validity_days > 0:
+            from django.utils import timezone
+            from datetime import timedelta
+            self.qr_expiry_date = timezone.now() + timedelta(days=self.qr_validity_days)
+        else:
+            self.qr_expiry_date = None
+        
+        self.is_expired = False
+        self.save()
+        
+        # Generate new QR code
+        from store.partner_views import generate_partner_qr_code
+        generate_partner_qr_code(self)
 
 
 class PartnerSale(models.Model):

@@ -15,9 +15,28 @@ from django.core.files.base import ContentFile
 def partner_landing(request, partner_code):
     """Landing page when someone scans a partner QR code"""
     try:
-        partner = Partner.objects.get(partner_code=partner_code, status='active')
+        partner = Partner.objects.get(partner_code=partner_code)
+        
+        # Check if partner is inactive
+        if partner.status != 'active':
+            messages.error(request, "This partner code is not active.")
+            return redirect('store:product_list')
+        
+        # Check if QR code has expired
+        if partner.qr_expiry_date and timezone.now() > partner.qr_expiry_date:
+            messages.error(request, "This partner code has expired. Please contact the partner for a new code.")
+            # Still track the attempted click for analytics
+            PartnerClick.objects.create(
+                partner=partner,
+                session_key=request.session.session_key or 'anonymous',
+                ip_address=get_client_ip(request),
+                converted=False,
+                clicked_at=timezone.now()
+            )
+            return redirect('store:product_list')
+            
     except Partner.DoesNotExist:
-        messages.error(request, "Invalid or inactive partner code.")
+        messages.error(request, "Invalid partner code.")
         return redirect('store:product_list')
     
     # Store partner code in session for commission tracking
@@ -25,7 +44,7 @@ def partner_landing(request, partner_code):
     request.session['partner_id'] = partner.id
     request.session.modified = True
     
-    # Track the click
+    # Track the successful click
     PartnerClick.objects.create(
         partner=partner,
         session_key=request.session.session_key or 'anonymous',
@@ -63,18 +82,24 @@ def partner_dashboard(request):
     # Recent sales
     recent_sales = partner.sales.all().order_by('-created_at')[:10]
     
+    # Check if QR code is expired or expiring soon
+    days_until_expiry = None
+    if partner.qr_expiry_date:
+        time_diff = partner.qr_expiry_date - timezone.now()
+        days_until_expiry = time_diff.days if time_diff.days > 0 else 0
+    
     context = {
         'partner': partner,
         'clicks': clicks,
         'sales': sales,
         'conversion_rate': conversion_rate,
         'recent_sales': recent_sales,
+        'days_until_expiry': days_until_expiry,
     }
     
     return render(request, 'partner_dashboard.html', context)
 
 
-# REMOVED @login_required - users need to be logged in but not through /accounts/login/
 def partner_register(request):
     """Registration form for new partners"""
     # Check if user is logged in
@@ -99,10 +124,11 @@ def partner_register(request):
             email=email,
             phone=phone,
             status='pending',
-            commission_percentage=10.00,  # Default 10%
+            commission_percentage=5.00,  # Default 5%
             total_sales=0,
             total_commission_earned=0,
-            total_commission_paid=0
+            total_commission_paid=0,
+            qr_validity_days=30  # Default 30 days expiry
         )
         
         messages.success(request, "Partner registration submitted! Awaiting approval.")
@@ -137,6 +163,12 @@ def generate_partner_qr_code(partner):
     file_name = f'{partner.partner_code}_qr.png'
     partner.qr_code_image.save(file_name, ContentFile(buffer.getvalue()), save=True)
     
+    # Set expiry date if not already set
+    if partner.qr_validity_days > 0 and not partner.qr_expiry_date:
+        from datetime import timedelta
+        partner.qr_expiry_date = timezone.now() + timedelta(days=partner.qr_validity_days)
+        partner.save()
+    
     return partner.qr_code_image
 
 
@@ -167,6 +199,10 @@ def admin_partner_list(request):
         
         if action == 'approve':
             partner.status = 'active'
+            # Set expiry date on approval
+            if partner.qr_validity_days > 0:
+                from datetime import timedelta
+                partner.qr_expiry_date = timezone.now() + timedelta(days=partner.qr_validity_days)
             partner.save()
             # Generate QR code for approved partner
             generate_partner_qr_code(partner)
@@ -175,6 +211,16 @@ def admin_partner_list(request):
             partner.status = 'inactive'
             partner.save()
             messages.success(request, f"Partner {partner.partner_name} deactivated!")
+        elif action == 'extend':
+            # Extend expiry by 30 days
+            from datetime import timedelta
+            if partner.qr_expiry_date:
+                partner.qr_expiry_date += timedelta(days=30)
+            else:
+                partner.qr_expiry_date = timezone.now() + timedelta(days=30)
+            partner.is_expired = False
+            partner.save()
+            messages.success(request, f"Extended expiry for {partner.partner_name} by 30 days!")
         
         return redirect('store:admin_partner_list')
     

@@ -1,7 +1,7 @@
 # store/urls.py
 from django.urls import path
 from . import views
-from . import partner_views  # ADD THIS LINE
+from . import partner_views  
 
 # handles URLs specific to the store
 app_name = 'store'
@@ -22,6 +22,7 @@ urlpatterns = [
     path('cart/', views.cart_detail, name='cart_detail'),
     path('cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('apply-partner-code/', views.apply_partner_code, name='apply_partner_code'),  # NEW LINE ADDED
     path('save-product/', views.toggle_save_item, name='toggle_save_item'),
 
     path('category/<slug:category_slug>/products/', views.category_products_page, name='category_products_page'),
