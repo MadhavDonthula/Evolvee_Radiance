@@ -1,5 +1,6 @@
 # store/views.py
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from .models import Category, Product, SavedItem
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -49,10 +50,6 @@ def product_detail(request, slug):
         'related_products': related_products,
         'is_saved': is_saved,
     })
-
-# store/views.py
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def toggle_save_item(request):
@@ -129,7 +126,11 @@ def add_to_cart(request, product_id):
     # Save changes to session
     request.session.modified = True
     
-    # Redirect back to referring page or category products page
+    # If AJAX request, return JSON response
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Added to cart!'})
+    
+    # Otherwise redirect back to referring page or category products page
     referer = request.META.get('HTTP_REFERER')
     if referer:
         return redirect(referer)
