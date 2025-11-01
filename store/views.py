@@ -295,6 +295,6 @@ def shopify_checkout(request):
 
     # Build Shopify cart URL
     cart_string = ",".join(line_items)
-    shopify_url = f"https://ncrzwx-hm.myshopify.com/cart/{cart_string}"
+    shopify_url = f"https://p16t10-q1.myshopify.com/cart/{cart_string}"
 
     return redirect(shopify_url)
