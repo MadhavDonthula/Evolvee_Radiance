@@ -197,8 +197,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Use local storage for now (will be replaced with Cloudinary later)
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# Use custom storage for media files that works with WhiteNoise in production
+DEFAULT_FILE_STORAGE = 'store.storage.MediaFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
