@@ -195,7 +195,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files configuration - Use S3 in production, local in development
-USE_S3 = env('USE_S3', default='False') == 'True'
+# Check USE_S3 environment variable (case-insensitive)
+USE_S3_STR = env('USE_S3', default='False').strip().lower()
+USE_S3 = USE_S3_STR in ('true', '1', 'yes', 'on')
 
 if USE_S3:
     # AWS S3 settings
@@ -203,6 +205,14 @@ if USE_S3:
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default='')
     AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='')
     AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
+    
+    # Validate that required S3 settings are provided
+    if not all([AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME]):
+        raise ValueError(
+            "S3 is enabled but required AWS credentials are missing. "
+            "Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_STORAGE_BUCKET_NAME."
+        )
+    
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
@@ -210,6 +220,12 @@ if USE_S3:
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_FILE_OVERWRITE = False
     AWS_QUERYSTRING_AUTH = False
+    
+    # S3 endpoint URL (for certain regions)
+    if AWS_S3_REGION_NAME in ['us-east-1']:
+        AWS_S3_ENDPOINT_URL = None  # Use default
+    else:
+        AWS_S3_ENDPOINT_URL = f'https://s3.{AWS_S3_REGION_NAME}.amazonaws.com'
     
     # S3 static files settings (if you want static files on S3 too)
     # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
