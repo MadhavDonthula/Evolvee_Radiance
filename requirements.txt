@@ -11,3 +11,5 @@ gunicorn
 psycopg2-binary 
 whitenoise 
 django-environ
+django-storages
+boto3
