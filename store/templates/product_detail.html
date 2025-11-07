@@ -241,6 +241,7 @@
                 {% if product.stock > 0 %}
                 <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="mt-6 sm:mt-8">
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
                     <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                         <div class="quantity-shell w-full sm:w-auto">
                             <button type="button" class="quantity-btn focus:outline-none" data-action="decrease">

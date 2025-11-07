@@ -129,6 +129,11 @@ def add_to_cart(request, product_id):
     # Save changes to session
     request.session.modified = True
     
+    # Prefer explicit next url if provided
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
+    
     # Redirect back to referring page or category products page
     referer = request.META.get('HTTP_REFERER')
     if referer:
