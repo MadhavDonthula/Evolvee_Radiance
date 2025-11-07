@@ -213,6 +213,122 @@
         }
         #product-modal input[type='number'] {
             -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .modal-card {
+            background: #16081f;
+            border-radius: 1.75rem;
+            padding: 1.5rem;
+            display: grid;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .modal-card {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                padding: 2.25rem;
+                gap: 2rem;
+            }
+        }
+        .modal-media {
+            background: linear-gradient(140deg, rgba(162, 89, 198, 0.2), rgba(225, 107, 140, 0.12));
+            border-radius: 1.5rem;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-media img {
+            border-radius: 1.25rem;
+            max-height: 320px;
+            object-fit: contain;
+        }
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .modal-info h1 {
+            font-size: clamp(1.8rem, calc(2vw + 1.2rem), 2.6rem);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .modal-section h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #f472b6;
+            margin-bottom: 0.45rem;
+        }
+        .modal-section p {
+            color: #d1c4dc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .modal-price-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+            align-items: center;
+        }
+        .modal-price {
+            font-size: clamp(1.9rem, calc(2.4vw + 1rem), 2.6rem);
+            font-weight: 700;
+            color: #f472b6;
+        }
+        .modal-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        @media (min-width: 768px) {
+            .modal-cta {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        .modal-quantity {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .modal-quantity button {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c8bdd6;
+        }
+        .modal-quantity input {
+            width: 3.25rem;
+            height: 3rem;
+            border: none;
+            background: transparent;
+            color: #fff;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .modal-add-btn {
+            background: linear-gradient(135deg, #a259c6, #e16b8c);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 1rem;
+            padding: 0.85rem 1.5rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 18px 40px rgba(226, 107, 140, 0.35);
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        @media (min-width: 768px) {
+            .modal-add-btn {
+                width: auto;
+            }
+        }
+        .modal-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 48px rgba(226, 107, 140, 0.45);
         }
     </style>
     
@@ -231,9 +347,7 @@
             data-image-url="{{ product.image.url }}"
             data-tagline="{{ product.tagline|escapejs }}"
             data-description="{{ product.description|escapejs }}">
-            {% if product.stock > 0 %}
-                <div class="in-stock">In stock</div>
-            {% else %}
+            {% if product.stock <= 0 %}
                 <div class="out-of-stock">Out of stock</div>
             {% endif %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
@@ -253,7 +367,7 @@
     <!-- Products by Category (bottom) -->
     <section class="max-w-5xl mx-auto mt-8 sm:mt-12 mb-8 sm:mb-12 px-3 sm:px-4">
         <div class="text-center mb-4 sm:mb-6">
-            <span class="brand-font text-base sm:text-lg md:text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 0.75rem sm:1rem; padding: 0.5rem 0.75rem sm:0.5rem 1rem md:0.5rem 2rem;">PRODUCTS BY CATEGORY</span>
+            <span class="brand-font text-base sm:text-lg md:text-xl tracking-wider" style="background: #bca4cb; color: #2d1537; border-radius: 1rem; padding: 0.5rem 1.5rem;">PRODUCTS BY CATEGORY</span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
             {% for cat in categories %}
@@ -306,8 +420,8 @@
                 counter.className = 'absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
                 counter.textContent = delta;
                 cartIcon.appendChild(counter);
-            }
-        ut}
+        }
+        }
         document.addEventListener('DOMContentLoaded', function() {
             // Modal logic
             const modal = document.getElementById('product-modal');
@@ -356,15 +470,10 @@
                         },
                         body: new URLSearchParams({quantity: 1})
                     })
-                    .then(res => {
-                        if (res.ok) {
-                            showToast('Added to cart!');
-                            updateCartCounter(1);
-                        } else {
-                            showToast('Could not add to cart.');
-                        }
-                    })
-                    .catch(() => showToast('Could not add to cart.'));
+                    .then(() => {
+                        showToast('Added to cart!');
+                        updateCartCounter(1);
+                    });
                 });
             });
             
@@ -384,36 +493,31 @@
                     };
                     
                     modalContent.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="flex items-center justify-center">
-                                <div class="bg-gray-800 p-4 rounded-xl w-full">
-                                    <img src="${product.image_url}" class="w-full h-auto object-contain rounded-lg" style="max-height: 320px;" alt="${product.name}">
-                                </div>
+                        <div class="modal-card">
+                            <div class="modal-media">
+                                <img src="${product.image_url}" alt="${product.name}">
                             </div>
-                            <div class="p-4">
-                                <h1 class="text-3xl font-bold text-white mb-4">${product.name}</h1>
-                                <div class="mb-6">
-                                    <p class="text-gray-300 text-lg">${product.tagline || ''}</p>
+                            <div class="modal-info">
+                                <div>
+                                    <h1>${product.name}</h1>
+                                    ${product.tagline ? `<p class="text-gray-300 text-sm sm:text-base mt-2 leading-relaxed">${product.tagline}</p>` : ''}
                                 </div>
-                                <div class="mb-8">
-                                    <h2 class="text-xl font-semibold text-pink-400 mb-2">Description</h2>
-                                    <p class="text-gray-300">${product.description || ''}</p>
+                                <div class="modal-section">
+                                    <h2>Description</h2>
+                                    <p>${product.description || 'No additional details provided.'}</p>
                                 </div>
-                                <div class="flex items-center justify-between mb-8">
-                                    <div class="text-3xl font-bold text-pink-500">$${product.price}</div>
-                                    <div>
-                                        ${product.stock > 0 ? `<span class='bg-green-500 text-white px-3 py-1 rounded-full'>In Stock (${product.stock} available)</span>` : `<span class='bg-red-500 text-white px-3 py-1 rounded-full'>Out of Stock</span>`}
-                                    </div>
+                                <div class="modal-price-row">
+                                    <span class="modal-price">$${product.price}</span>
                                 </div>
                                 ${product.stock > 0 ? `
-                                <form method="post" action="/cart/add/${product.id}/" class="flex items-center mb-6">
+                                <form method="post" action="/cart/add/${product.id}/" class="modal-cta">
                                     <input type="hidden" name="csrfmiddlewaretoken" value="${CSRF_TOKEN}">
-                                    <div class="flex items-center bg-gray-900 rounded-l-lg">
-                                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="decrease">-</button>
-                                        <input type="number" name="quantity" min="1" max="${product.stock}" value="1" class="w-12 text-center bg-gray-900 text-white border-0 focus:outline-none" id="modal-quantity">
-                                        <button type="button" class="px-4 py-2 text-gray-400 hover:text-white focus:outline-none quantity-btn" data-action="increase">+</button>
+                                    <div class="modal-quantity">
+                                        <button type="button" class="quantity-btn" data-action="decrease">-</button>
+                                        <input type="number" name="quantity" min="1" max="${product.stock}" value="1" id="modal-quantity">
+                                        <button type="button" class="quantity-btn" data-action="increase">+</button>
                                     </div>
-                                    <button type="submit" class="flex-1 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-r-lg transition">Add to Cart</button>
+                                    <button type="submit" class="modal-add-btn">Add to Cart</button>
                                 </form>` : ''}
                             </div>
                         </div>

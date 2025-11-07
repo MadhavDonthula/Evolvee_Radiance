@@ -97,6 +97,7 @@
 #### NEWW####
 
 import os
+import logging
 from pathlib import Path
 import environ
 import dj_database_url
@@ -199,6 +200,11 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 USE_S3_STR = env('USE_S3', default='False').strip().lower()
 USE_S3 = USE_S3_STR in ('true', '1', 'yes', 'on')
 
+# Log S3 configuration status at startup (print for immediate visibility)
+print(f"[SETTINGS] S3 Configuration Check - USE_S3_STR: '{USE_S3_STR}', USE_S3: {USE_S3}")
+settings_logger = logging.getLogger(__name__)
+settings_logger.info(f"S3 Configuration Check - USE_S3_STR: '{USE_S3_STR}', USE_S3: {USE_S3}")
+
 if USE_S3:
     # AWS S3 settings - read from environment
     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default='')
@@ -206,9 +212,19 @@ if USE_S3:
     AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='')
     AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
     
+    # Log what we got from environment
+    print(f"[SETTINGS] AWS_ACCESS_KEY_ID: {'Set' if AWS_ACCESS_KEY_ID else 'Missing'}")
+    print(f"[SETTINGS] AWS_SECRET_ACCESS_KEY: {'Set' if AWS_SECRET_ACCESS_KEY else 'Missing'}")
+    print(f"[SETTINGS] AWS_STORAGE_BUCKET_NAME: {AWS_STORAGE_BUCKET_NAME if AWS_STORAGE_BUCKET_NAME else 'Missing'}")
+    settings_logger.info(f"AWS_ACCESS_KEY_ID: {'Set' if AWS_ACCESS_KEY_ID else 'Missing'}")
+    settings_logger.info(f"AWS_SECRET_ACCESS_KEY: {'Set' if AWS_SECRET_ACCESS_KEY else 'Missing'}")
+    settings_logger.info(f"AWS_STORAGE_BUCKET_NAME: {AWS_STORAGE_BUCKET_NAME if AWS_STORAGE_BUCKET_NAME else 'Missing'}")
+    
     # Validate that required S3 settings are provided
     if all([AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME]):
         # All credentials present - configure S3
+        print("[SETTINGS] All S3 credentials present - configuring S3 storage")
+        settings_logger.info("All S3 credentials present - configuring S3 storage")
         AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
         AWS_S3_OBJECT_PARAMETERS = {
             'CacheControl': 'max-age=86400',
@@ -232,9 +248,7 @@ if USE_S3:
         MEDIA_ROOT = ''
     else:
         # Missing credentials - fall back to local storage
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.warning(
+        settings_logger.warning(
             "S3 is enabled but required AWS credentials are missing. "
             "Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_STORAGE_BUCKET_NAME. "
             "Falling back to local storage."
@@ -244,6 +258,8 @@ if USE_S3:
 
 if not USE_S3:
     # Local media files configuration (for development)
+    print("[SETTINGS] Using local file storage (not S3)")
+    settings_logger.info("Using local file storage (not S3)")
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / "media"
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
@@ -270,3 +286,37 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mdonthula98@gmail.com'
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='numk eoez sifm tnnz')  # Use an App Password, not your Gmail password!
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Logging configuration for S3 debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'store.storage': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'lip_products.settings': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
