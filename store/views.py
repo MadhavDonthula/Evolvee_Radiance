@@ -298,3 +298,21 @@ def shopify_checkout(request):
     shopify_url = f"https://p16t10-q1.myshopify.com/cart/{cart_string}"
 
     return redirect(shopify_url)
+
+# Debug view for S3 configuration (remove in production)
+from django.http import JsonResponse
+from django.conf import settings
+
+def debug_s3(request):
+    """Debug view to check S3 configuration"""
+    data = {
+        'USE_S3': getattr(settings, 'USE_S3', False),
+        'AWS_ACCESS_KEY_ID': '✓ Set' if getattr(settings, 'AWS_ACCESS_KEY_ID', '') else '✗ Missing',
+        'AWS_SECRET_ACCESS_KEY': '✓ Set' if getattr(settings, 'AWS_SECRET_ACCESS_KEY', '') else '✗ Missing',
+        'AWS_STORAGE_BUCKET_NAME': getattr(settings, 'AWS_STORAGE_BUCKET_NAME', '✗ Missing'),
+        'AWS_S3_REGION_NAME': getattr(settings, 'AWS_S3_REGION_NAME', '✗ Missing'),
+        'DEFAULT_FILE_STORAGE': getattr(settings, 'DEFAULT_FILE_STORAGE', '✗ Missing'),
+        'MEDIA_URL': getattr(settings, 'MEDIA_URL', '✗ Missing'),
+        'MEDIA_ROOT': str(getattr(settings, 'MEDIA_ROOT', '✗ Missing')),
+    }
+    return JsonResponse(data, indent=2)

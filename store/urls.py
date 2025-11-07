@@ -26,4 +26,7 @@ urlpatterns = [
     path('category/<slug:category_slug>/products/', views.category_products_page, name='category_products_page'),
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_us, name='contact_us'),
+    
+    # Debug endpoint (remove in production)
+    path('debug-s3/', views.debug_s3, name='debug_s3'),
 ]
