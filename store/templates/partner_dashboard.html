@@ -60,7 +60,8 @@
             <div class="card">
                 <div class="card-header">Your Referral Link</div>
                 <div class="card-body">
-                    <input type="text" class="form-control" value="http://localhost:8000/partner/{{ partner.partner_code }}/" readonly>
+                    <!-- CHANGED: Dynamic URL based on current host -->
+                    <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.get_host }}/partner/{{ partner.partner_code }}/" readonly>
                     <p class="mt-3">Share this link or QR code to earn {{ partner.commission_percentage }}% commission!</p>
                 </div>
             </div>

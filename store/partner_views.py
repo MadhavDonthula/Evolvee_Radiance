@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
+from django.conf import settings  # ADDED THIS IMPORT
 from .models import Partner, PartnerSale, PartnerClick, Product, Category
 import qrcode
 from io import BytesIO
@@ -147,8 +148,10 @@ def generate_partner_qr_code(partner):
         border=4,
     )
     
-    # Create the URL
-    referral_url = f"http://localhost:8000/partner/{partner.partner_code}/"
+    # CHANGED: Use dynamic URL based on environment
+    site_url = getattr(settings, 'SITE_URL', 'http://localhost:8000')
+    referral_url = f"{site_url}/partner/{partner.partner_code}/"
+    
     qr.add_data(referral_url)
     qr.make(fit=True)
     

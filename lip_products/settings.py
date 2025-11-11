@@ -219,3 +219,12 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mdonthula98@gmail.com'
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='numk eoez sifm tnnz')  # Use an App Password, not your Gmail password!
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Partner QR Code Configuration
+# This determines the URL used in QR codes
+if os.environ.get('RENDER'):
+    # Production on Render
+    SITE_URL = 'https://evolveeradiance.com'
+else:
+    # Local development
+    SITE_URL = 'http://localhost:8000'
