@@ -75,17 +75,47 @@
             <!-- Cart Summary -->
             <div class="cart-summary lg:w-1/2 p-4 sm:p-6">
                 <h2 class="text-lg sm:text-xl font-bold text-white mb-4">Cart Summary</h2>
+                
+                <!-- Partner Code Entry -->
+                <div class="mb-4 pb-4 border-b border-gray-700">
+                    <form method="POST" action="{% url 'store:apply_partner_code' %}" class="flex gap-2">
+                        {% csrf_token %}
+                        <input type="text" 
+                               name="partner_code" 
+                               placeholder="Enter partner code" 
+                               value="{{ partner.partner_code|default:'' }}"
+                               class="flex-1 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">
+                        <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg text-sm">
+                            Apply
+                        </button>
+                    </form>
+                    {% if partner %}
+                    <p class="text-green-400 text-xs mt-2">
+                        ✓ Partner discount active: {{ partner.partner_name }} ({{ partner.commission_percentage }}% off)
+                    </p>
+                    {% endif %}
+                </div>
+                
                 <div class="flex justify-between text-gray-400 mb-2 text-sm sm:text-base">
                     <span>Subtotal</span>
-                    <span>${{ total_price }}</span>
+                    <span>${{ subtotal|default:total_price }}</span>
                 </div>
+                
+                {% if discount_amount > 0 %}
+                <div class="flex justify-between text-green-400 mb-2 text-sm sm:text-base">
+                    <span>Partner Discount ({{ partner.commission_percentage }}%)</span>
+                    <span>-${{ discount_amount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+                
                 <div class="flex justify-between text-gray-400 mb-2 text-sm sm:text-base">
                     <span>Shipping</span>
                     <span>Free</span>
                 </div>
+                
                 <div class="flex justify-between text-pink-400 font-bold text-base sm:text-lg pt-4 border-t border-gray-700 mt-4">
                     <span>Total</span>
-                    <span>${{ total_price }}</span>
+                    <span>${{ total_price|floatformat:2 }}</span>
                 </div>
             </div>
             <!-- Checkout Buttons -->

@@ -279,7 +279,17 @@
 
                     {% if user.is_authenticated %}
                         <span class="text-white font-medium text-xs sm:text-sm md:text-base hidden lg:block">Hi, {{ user.username }}</span>
-                        <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:inline;">
+                        
+                        <!-- PARTNER DASHBOARD BUTTON -->
+                        {% if user.partner_profile %}
+                            {% if user.partner_profile.status == 'active' %}
+                                <a href="{% url 'store:partner_dashboard' %}" class="bg-gradient-to-r from-pink-500 to-pink-400 text-white font-medium px-3 py-1.5 rounded-lg text-xs sm:text-sm md:text-base hover:from-pink-600 hover:to-pink-500 transition-all hidden lg:block">
+                                    Partner Dashboard
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <form id="logout-form" method="POST" action="{% url 'store:logout' %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="text-white hover:text-pink-300 font-medium nav-link bg-transparent border-none cursor-pointer text-xs sm:text-sm md:text-base hidden lg:block transition-colors">Logout</button>
                         </form>
@@ -310,6 +320,13 @@
         <div id="mobile-menu" class="hidden md:hidden w-full mt-2 px-4">
             <div class="bg-white shadow-xl rounded-xl p-4 sm:p-5 flex flex-col space-y-2 sm:space-y-3 border border-gray-100">
                 {% if user.is_authenticated %}
+                    <!-- PARTNER DASHBOARD MOBILE BUTTON -->
+                    {% if user.partner_profile %}
+                        {% if user.partner_profile.status == 'active' %}
+                            <a href="{% url 'store:partner_dashboard' %}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200">Partner Dashboard</a>
+                        {% endif %}
+                    {% endif %}
+                    
                     <a href="{% url 'store:about' %}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200">About Us</a>
                     <a href="{% url 'store:contact_us' %}" class="text-gray-700 hover:text-purple-600 hover:bg-purple-50 py-3 sm:py-3.5 px-4 sm:px-5 rounded-lg text-sm sm:text-base font-medium transition-all duration-200">Contact Us</a>
                     <hr class="my-2 sm:my-3 border-gray-200">

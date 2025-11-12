@@ -239,7 +239,7 @@ if USE_S3:
         else:
             AWS_S3_ENDPOINT_URL = f'https://s3.{AWS_S3_REGION_NAME}.amazonaws.com'
         
-        # S3 static files settings (if you want static files on S3 too)
+        # S3 static files settings 
         # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
         
         # S3 media files settings
@@ -263,6 +263,8 @@ if not USE_S3:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / "media"
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+LOGIN_URL = "/login/"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -320,3 +322,12 @@ LOGGING = {
         },
     },
 }
+
+# Partner QR Code Configuration
+# This determines the URL used in QR codes
+if os.environ.get('RENDER'):
+    # Production on Render
+    SITE_URL = 'https://evolveeradiance.com'
+else:
+    # Local development
+    SITE_URL = 'http://localhost:8000'

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Partners{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Manage Partners</h1>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Partner Name</th>
+                    <th>Email</th>
+                    <th>Code</th>
+                    <th>Status</th>
+                    <th>Commission %</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partner in partners %}
+                <tr>
+                    <td>{{ partner.partner_name }}</td>
+                    <td>{{ partner.email }}</td>
+                    <td>{{ partner.partner_code }}</td>
+                    <td>
+                        {% if partner.status == 'active' %}
+                            <span class="badge bg-success">Active</span>
+                        {% elif partner.status == 'pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ partner.commission_percentage }}%</td>
+                    <td>
+                        <form method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="partner_id" value="{{ partner.id }}">
+                            {% if partner.status == 'pending' %}
+                                <button type="submit" name="action" value="approve" class="btn btn-sm btn-success">Approve</button>
+                            {% elif partner.status == 'active' %}
+                                <button type="submit" name="action" value="deactivate" class="btn btn-sm btn-warning">Deactivate</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No partners yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Become a Partner - Evolvée Radiance{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #2d1537;
+    }
+    .partner-card {
+        background: #1a0823;
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+        border: 2px solid #a259c6;
+    }
+    .benefit-item {
+        background: rgba(162, 89, 198, 0.1);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        border: 1px solid rgba(162, 89, 198, 0.3);
+    }
+    .benefit-item:hover {
+        background: rgba(162, 89, 198, 0.2);
+        transform: translateY(-3px);
+    }
+    .form-input {
+        background: #2d1537;
+        border: 1px solid #a259c6;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        width: 100%;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #e16b8c;
+        box-shadow: 0 0 0 3px rgba(225, 107, 140, 0.1);
+    }
+    .form-input::placeholder {
+        color: #999;
+    }
+</style>
+
+<div class="min-h-screen py-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-8 px-4">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-4" style="background: linear-gradient(90deg, #a259c6, #e16b8c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Partner Program
+        </h1>
+        <p class="text-gray-300 text-lg">Turn your influence into income with Evolvée Radiance</p>
+    </div>
+
+    <!-- Benefits Grid -->
+    <div class="max-w-6xl mx-auto mb-8 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="benefit-item text-center">
+                <div class="text-3xl mb-3">📱</div>
+                <h3 class="text-lg font-semibold mb-2" style="color: #e16b8c;">Instant QR Codes</h3>
+                <p class="text-gray-300 text-sm">Get your unique QR code immediately after approval</p>
+            </div>
+            <div class="benefit-item text-center">
+                <div class="text-3xl mb-3">💰</div>
+                <h3 class="text-lg font-semibold mb-2" style="color: #e16b8c;">5% Commission</h3>
+                <p class="text-gray-300 text-sm">Earn on every sale from your referrals</p>
+            </div>
+            <div class="benefit-item text-center">
+                <div class="text-3xl mb-3">📊</div>
+                <h3 class="text-lg font-semibold mb-2" style="color: #e16b8c;">Live Dashboard</h3>
+                <p class="text-gray-300 text-sm">Track clicks, sales, and earnings in real-time</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="max-w-xl mx-auto px-4">
+        <div class="partner-card p-6 sm:p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center" style="color: #e16b8c;">Apply to Become a Partner</h2>
+            
+            {% if user.is_authenticated %}
+                {% if user.partner_profile %}
+                    <div class="text-center p-6">
+                        {% if user.partner_profile.status == 'pending' %}
+                            <div class="text-yellow-400 text-lg mb-3">⏳ Application Pending</div>
+                            <p class="text-gray-300">Your partner application is under review. We'll notify you once approved!</p>
+                        {% elif user.partner_profile.status == 'active' %}
+                            <div class="text-green-400 text-lg mb-3">✅ You're Already a Partner!</div>
+                            <a href="{% url 'store:partner_dashboard' %}" class="inline-block mt-4 px-6 py-3 rounded-full font-semibold" style="background: #e16b8c; color: white;">
+                                Go to Dashboard →
+                            </a>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="block text-gray-300 mb-2">Business/Partner Name *</label>
+                            <input type="text" name="partner_name" class="form-input" placeholder="Your brand or influencer name" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 mb-2">Email Address *</label>
+                            <input type="email" name="email" class="form-input" placeholder="partner@example.com" required>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-300 mb-2">Phone Number (Optional)</label>
+                            <input type="text" name="phone" class="form-input" placeholder="+1 (555) 123-4567">
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-full font-bold text-lg transition-all transform hover:scale-105" style="background: linear-gradient(90deg, #a259c6, #e16b8c); color: white;">
+                            Submit Application →
+                        </button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <div class="text-center">
+                    <p class="text-gray-300 mb-6">Please login or create an account to apply for our partner program.</p>
+                    <a href="{% url 'store:login' %}" class="inline-block px-6 py-3 rounded-full font-semibold" style="background: #e16b8c; color: white;">
+                        Login to Apply →
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="mt-8 text-center">
+            <h3 class="text-lg font-semibold mb-4" style="color: #a259c6;">How It Works</h3>
+            <div class="space-y-3 text-sm text-gray-300">
+                <p>1. Apply with your business information</p>
+                <p>2. Get approved by our team (usually within 24 hours)</p>
+                <p>3. Receive your unique QR code and referral link</p>
+                <p>4. Share with your audience and earn 10% on every sale</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

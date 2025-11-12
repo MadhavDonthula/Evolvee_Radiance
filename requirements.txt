@@ -1,7 +1,5 @@
 Django
-
 dj-database-url
-
 opencv-python 
 numpy
 whitenoise
@@ -13,3 +11,4 @@ whitenoise
 django-environ
 django-storages
 boto3
+qrcode[pil]
